@@ -1,0 +1,33 @@
+@model List<Dictionary<string,object?>>
+@{ViewData["Title"]="Relatórios";string tipo=ViewBag.Tipo;int total=ViewBag.Total;int pagina=ViewBag.Pagina;}
+<div class="breadcrumb-linha">Análise <span>/</span> Relatórios</div>
+<div class="cabecalho-pagina">
+<div>
+<h1>Informação para evoluir</h1>
+<p>Indicadores reais da equipe, respeitando a unidade selecionada.</p>
+</div>
+<a href="/Relatorios/Exportar?tipo=@tipo" class="btn btn-primary">
+<i class="fa-solid fa-download me-2">
+</i>Exportar CSV</a>
+</div>
+<section class="painel">
+<form method="get" class="barra-filtros">
+<select name="tipo" class="form-select" aria-label="Tipo de relatório">@foreach(var opcao in new[]{("AlunosPorFaixa","Alunos por faixa"),("Graduacoes","Graduações"),("Frequencia","Frequência"),("Financeiro","Financeiro"),("Atletas","Atletas")}){<option value="@opcao.Item1" selected="@(tipo==opcao.Item1)">@opcao.Item2</option>}</select>
+<input name="busca" value="@ViewBag.Busca" class="form-control" placeholder="Buscar no relatório..." aria-label="Buscar no relatório"/>
+<button class="btn btn-light">Consultar</button>
+</form>
+<div class="table-responsive">
+<table class="table tabela">@if(Model.Count>0){<thead>
+<tr>@foreach(var coluna in Model[0].Keys){<th>@coluna</th>}</tr>
+</thead>
+<tbody>@foreach(var linha in Model){<tr>@foreach(var valor in linha.Values){<td>@(valor is DateTime data?data.ToString("dd/MM/yyyy"):valor is decimal numero?numero.ToString("N2"):valor)</td>}</tr>}</tbody>}else{<tbody>
+<tr>
+<td class="estado-vazio">Nenhum dado encontrado para este filtro.</td>
+</tr>
+</tbody>}</table>
+</div>
+<div class="paginacao">
+<span>@total registros · Página @pagina</span>
+<div>@if(pagina>1){<a href="?tipo=@tipo&pagina=@(pagina-1)&busca=@Uri.EscapeDataString((string?)ViewBag.Busca??"")" class="btn btn-light btn-sm">Anterior</a>}@if(pagina*20<total){<a href="?tipo=@tipo&pagina=@(pagina+1)&busca=@Uri.EscapeDataString((string?)ViewBag.Busca??"")" class="btn btn-light btn-sm">Próxima</a>}</div>
+</div>
+</section>

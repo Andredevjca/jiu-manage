@@ -1,0 +1,22 @@
+@model List<(int Id,string Nome,bool Concedida)>
+@{ViewData["Title"]="Permissões";int usuarioId=ViewBag.UsuarioId;}
+<div class="breadcrumb-linha">Configurações <span>/</span> Permissões</div>
+<div class="cabecalho-pagina">
+<div>
+<h1>Acesso com responsabilidade</h1>
+<p>Os perfis definem o acesso base. Conceda permissões adicionais por operação.</p>
+</div>
+</div>
+<section class="painel formulario">
+<form method="get" class="d-flex gap-3 mb-4">
+<select name="usuarioId" class="form-select" aria-label="Usuário" required>
+<option value="">Selecione o usuário</option>@foreach(Usuario usuario in ViewBag.Usuarios){<option value="@usuario.Id" selected="@(usuario.Id==usuarioId)">@usuario.Nome · @usuario.Perfil</option>}</select>
+<button class="btn btn-light">Consultar</button>
+</form>@if(usuarioId>0){<div class="alert alert-info">Administradores têm acesso total. O perfil Aluno permanece restrito aos próprios dados, mesmo com permissões adicionais.</div>
+<form method="post" action="/Permissoes/Salvar">@Html.AntiForgeryToken()<input type="hidden" name="usuarioId" value="@usuarioId"/>
+<div class="permissoes-grade">@foreach(var permissao in Model){<label class="form-check">
+<input type="checkbox" name="permissoes" value="@permissao.Id" checked="@permissao.Concedida" class="form-check-input"/>@permissao.Nome</label>}</div>
+<div class="rodape-formulario">
+<button class="btn btn-primary">Salvar permissões</button>
+</div>
+</form>}</section>

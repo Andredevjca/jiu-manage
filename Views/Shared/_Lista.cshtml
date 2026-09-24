@@ -1,0 +1,83 @@
+@model ListaModelo
+@inject JiuManager.Services.PermissaoServico Permissoes
+@{
+ViewData["Title"]=Model.Modulo.Titulo;
+var modulo=Model.Modulo.Plural;
+string[] preferidos=modulo switch{"Alunos"=>["Nome","FaixaId","GrauId","UnidadeId","Status"],"Professores"=>["Nome","FaixaId","GrauId","UnidadeId","Status"],"Graduacoes"=>["AlunoId","FaixaNovaId","GrauNovoId","ProfessorId","DataGraduacao"],"Mensalidades"=>["AlunoId","Competencia","Vencimento","Valor","Status"],"Recebimentos"=>["MensalidadeId","Data","Valor","FormaPagamento"],_=>Model.Modulo.Campos.Where(c=>c.Entrada!="foto"&&c.Entrada!="textarea").Take(5).Select(c=>c.Nome).ToArray()};
+var campos=preferidos.Select(n=>Model.Modulo.Campos.First(c=>c.Nome==n)).ToList();
+var criar=modulo!="Equipes"&&await Permissoes.PodeAsync(modulo,"criar");var editar=await Permissoes.PodeAsync(modulo,"editar")&&!Model.Modulo.Imutavel;var excluir=modulo!="Equipes"&&await Permissoes.PodeAsync(modulo,"excluir")&&!Model.Modulo.Imutavel;
+}
+<div class="breadcrumb-linha">@Model.Modulo.Grupo <span>/</span> @Model.Modulo.Titulo</div>
+<div class="cabecalho-pagina">
+<div>
+<h1>@Model.Modulo.Titulo <span class="contador">@Model.Total</span>
+</h1>
+<p>Organize @Model.Modulo.Titulo.ToLower() e acompanhe a evolução da sua equipe.</p>
+</div>@if(criar){<a class="btn btn-primary" href="/@modulo/Criar">
+<i class="fa-solid fa-plus me-2">
+</i>Novo cadastro</a>}</div>
+@if(modulo=="Mensalidades"&&criar){<form action="/Mensalidades/Gerar" method="post" class="faixa-acao">@Html.AntiForgeryToken()<div>
+<i class="fa-solid fa-wand-magic-sparkles me-2">
+</i>
+<strong>Mensalidades do mês</strong>
+<small>Gere cobranças dos alunos com plano ativo.</small>
+</div>
+<input type="month" name="competencia" class="form-control" value="@DateTime.Today.ToString("yyyy-MM")" required/>
+<button class="btn btn-outline-primary">Gerar mensalidades</button>
+</form>}
+<section class="painel">
+<form method="get" class="barra-filtros">
+<div class="campo-busca">
+<i class="fa-solid fa-magnifying-glass">
+</i>
+<input name="busca" value="@Model.Busca" placeholder="Buscar em @Model.Modulo.Titulo.ToLower()..." aria-label="Buscar"/>
+</div>@if(Model.Modulo.Campos.Any(c=>c.Nome=="Status")){<select name="status" class="form-select filtro-status" aria-label="Filtrar status">
+<option value="">Todos os status</option>@foreach(var status in Model.Modulo.Campos.First(c=>c.Nome=="Status").Opcoes!.Concat(modulo=="Mensalidades"?new[]{"Pago","Atrasado"}:Array.Empty<string>())){<option selected="@(Model.Status==status)">@status</option>}</select>}<button class="btn btn-light">
+<i class="fa-solid fa-sliders me-2">
+</i>Filtrar</button>@if(!string.IsNullOrEmpty(Model.Busca)||!string.IsNullOrEmpty(Model.Status)){<a href="/@modulo" class="btn btn-link">Limpar</a>}</form>
+<div class="table-responsive">
+<table class="table tabela">
+<thead>
+<tr>@foreach(var campo in campos){<th>@campo.Rotulo</th>}<th class="text-end">Ações</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var registro in Model.Registros){<tr>@foreach(var campo in campos){var valor=HelperFormatacao.Valor(registro.GetValueOrDefault(campo.Nome),campo,Model.Opcoes);<td>@if(campo.Nome is "Nome" or "AlunoId"){<div class="pessoa-celula">@if(registro.GetValueOrDefault("Foto") is string foto&&!string.IsNullOrEmpty(foto)){<img src="@foto" class="avatar" alt=""/>}else{<span class="avatar">@HelperFormatacao.Iniciais(valor)</span>}<div>
+<a href="/@modulo/Detalhes/@registro["Id"]" class="nome-pessoa">@valor</a>
+<small>@(registro.GetValueOrDefault("Email")??("#"+Convert.ToInt32(registro["Id"]).ToString("D6")))</small>
+</div>
+</div>}else if(campo.Nome=="Status"){<span class="status @(valor is "Ativo" or "Pago"?"positivo":valor=="Atrasado"?"negativo":"neutro")">@valor</span>}else if(campo.Nome.Contains("Faixa")){<span class="faixa-etiqueta">
+<i class="fa-solid fa-grip-lines">
+</i>@valor</span>}else{@valor}</td>}<td>
+<div class="acoes-tabela">
+<a class="botao-icone" title="Visualizar" aria-label="Visualizar" href="/@modulo/Detalhes/@registro["Id"]">
+<i class="fa-regular fa-eye">
+</i>
+</a>@if(editar){<a class="botao-icone" title="Editar" aria-label="Editar" href="/@modulo/Editar/@registro["Id"]">
+<i class="fa-regular fa-pen-to-square">
+</i>
+</a>}@if(excluir){<form action="/@modulo/Excluir" method="post" data-confirmar="Excluir este registro? Esta ação não pode ser desfeita.">@Html.AntiForgeryToken()<input name="id" type="hidden" value="@registro["Id"]"/>
+<button class="botao-icone text-danger" title="Excluir" aria-label="Excluir">
+<i class="fa-regular fa-trash-can">
+</i>
+</button>
+</form>}</div>
+</td>
+</tr>}
+@if(Model.Registros.Count==0){<tr>
+<td colspan="@(campos.Count+1)">
+<div class="estado-vazio">
+<i class="fa-solid fa-magnifying-glass">
+</i>
+<h3>Nenhum registro encontrado</h3>
+<p>Ajuste os filtros ou adicione o primeiro cadastro.</p>
+</div>
+</td>
+</tr>}</tbody>
+</table>
+</div>
+<div class="paginacao">
+<span>@Model.Total registros · Página @Model.Pagina de @Math.Max(1,Model.Paginas)</span>
+<div>@if(Model.Pagina>1){<a class="btn btn-light btn-sm" href="?pagina=@(Model.Pagina-1)&busca=@Uri.EscapeDataString(Model.Busca)&status=@Uri.EscapeDataString(Model.Status)">Anterior</a>}@if(Model.Pagina<Model.Paginas){<a class="btn btn-light btn-sm" href="?pagina=@(Model.Pagina+1)&busca=@Uri.EscapeDataString(Model.Busca)&status=@Uri.EscapeDataString(Model.Status)">Próxima</a>}</div>
+</div>
+</section>

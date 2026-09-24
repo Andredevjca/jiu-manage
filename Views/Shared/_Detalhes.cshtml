@@ -1,0 +1,22 @@
+@model DetalhesModelo
+@inject JiuManager.Services.PermissaoServico Permissoes
+@{ViewData["Title"]=Model.Modulo.Titulo;}
+<div class="breadcrumb-linha">@Model.Modulo.Grupo <span>/</span>
+<a href="/@Model.Modulo.Plural">@Model.Modulo.Titulo</a>
+<span>/</span>Detalhes</div>
+<div class="cabecalho-pagina">
+<div>
+<h1>@Model.Modulo.Titulo · #@Model.Registro.Id.ToString("D6")</h1>
+<p>Informações e acompanhamento do cadastro.</p>
+</div>
+<div class="d-flex gap-2">
+<a href="/@Model.Modulo.Plural" class="btn btn-light">Voltar</a>@if(!Model.Modulo.Imutavel&&await Permissoes.PodeAsync(Model.Modulo.Plural,"editar")){<a href="/@Model.Modulo.Plural/Editar/@Model.Registro.Id" class="btn btn-primary">Editar cadastro</a>}@if(Model.Registro is Mensalidade mensalidade && mensalidade.Status=="Pendente" && await Permissoes.PodeAsync("Recebimentos","criar")){<a href="/Recebimentos/Criar?mensalidadeId=@mensalidade.Id" class="btn btn-primary">
+<i class="fa-solid fa-check me-2">
+</i>Receber pagamento</a>}@if(Model.Modulo.Nome=="Graduacao"&&await Permissoes.PodeAsync("Certificados","visualizar")){<a href="/Certificados/Visualizar/@Model.Registro.Id" class="btn btn-primary">Ver certificado</a>}</div>
+</div>
+<section class="painel formulario">
+<dl class="row g-4">@foreach(var campo in Model.Modulo.Campos){var valor=Model.Registro.GetType().GetProperty(campo.Nome)!.GetValue(Model.Registro);<div class="col-md-4">
+<dt>@campo.Rotulo</dt>
+<dd>@if(campo.Entrada=="foto"&&valor is string foto&&!string.IsNullOrEmpty(foto)){<img src="@foto" class="foto-perfil" alt="Foto"/>}else{@HelperFormatacao.Valor(valor,campo,Model.Opcoes)}</dd>
+</div>}</dl>
+</section>

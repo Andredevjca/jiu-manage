@@ -1,0 +1,45 @@
+@model ListaModelo
+@{var documento=ViewData["Documento"]?.ToString();}
+<div class="breadcrumb-linha">Documentos <span>/</span> @documento</div>
+<div class="cabecalho-pagina">
+<div>
+<h1>@documento</h1>
+<p>Identidade e reconhecimento para os atletas da equipe.</p>
+</div>
+</div>
+<section class="painel">
+<form method="get" class="barra-filtros">
+<div class="campo-busca">
+<i class="fa-solid fa-search">
+</i>
+<input name="busca" value="@Model.Busca" placeholder="Buscar atleta..." aria-label="Buscar atleta"/>
+</div>
+<button class="btn btn-light">Buscar</button>
+</form>
+<div class="table-responsive">
+<table class="table tabela">
+<thead>
+<tr>
+<th>Atleta</th>
+<th>Identificação</th>
+<th class="text-end">Documento</th>
+</tr>
+</thead>
+<tbody>@foreach(var registro in Model.Registros){<tr>
+<td class="nome-pessoa">@(registro.ContainsKey("Nome")?registro["Nome"]:Model.Opcoes["Alunos"].GetValueOrDefault(Convert.ToInt32(registro["AlunoId"])))</td>
+<td>#@Convert.ToInt32(registro["Id"]).ToString("D6")</td>
+<td class="text-end">
+<a class="btn btn-light btn-sm" href="/@documento/Visualizar/@registro["Id"]">
+<i class="fa-regular fa-eye me-2">
+</i>Visualizar</a>
+</td>
+</tr>}@if(Model.Total==0){<tr>
+<td colspan="3" class="estado-vazio">Nenhum registro disponível.</td>
+</tr>}</tbody>
+</table>
+</div>
+<div class="paginacao">
+<span>@Model.Total registros · Página @Model.Pagina</span>
+<div>@if(Model.Pagina>1){<a href="?pagina=@(Model.Pagina-1)&busca=@Uri.EscapeDataString(Model.Busca)" class="btn btn-light btn-sm">Anterior</a>}@if(Model.Pagina<Model.Paginas){<a href="?pagina=@(Model.Pagina+1)&busca=@Uri.EscapeDataString(Model.Busca)" class="btn btn-light btn-sm">Próxima</a>}</div>
+</div>
+</section>

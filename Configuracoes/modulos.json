@@ -1,0 +1,1114 @@
+[
+  {
+    "nome": "Equipe",
+    "plural": "Equipes",
+    "titulo": "Equipe",
+    "icone": "shield-halved",
+    "grupo": "Configurações",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "NomeFantasia",
+        "tipo": "string",
+        "rotulo": "Nome fantasia"
+      },
+      {
+        "nome": "Logo",
+        "tipo": "string",
+        "rotulo": "Logo",
+        "entrada": "foto"
+      },
+      {
+        "nome": "Telefone",
+        "tipo": "string",
+        "rotulo": "Telefone"
+      },
+      {
+        "nome": "Whatsapp",
+        "tipo": "string",
+        "rotulo": "WhatsApp"
+      },
+      {
+        "nome": "Email",
+        "tipo": "string",
+        "rotulo": "E-mail",
+        "entrada": "email"
+      },
+      {
+        "nome": "Site",
+        "tipo": "string",
+        "rotulo": "Site"
+      },
+      {
+        "nome": "Cep",
+        "tipo": "string",
+        "rotulo": "CEP"
+      },
+      {
+        "nome": "Endereco",
+        "tipo": "string",
+        "rotulo": "Endereço"
+      },
+      {
+        "nome": "Numero",
+        "tipo": "string",
+        "rotulo": "Número"
+      },
+      {
+        "nome": "Bairro",
+        "tipo": "string",
+        "rotulo": "Bairro"
+      },
+      {
+        "nome": "Cidade",
+        "tipo": "string",
+        "rotulo": "Cidade"
+      },
+      {
+        "nome": "Estado",
+        "tipo": "string",
+        "rotulo": "Estado"
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo"
+        ]
+      }
+    ],
+    "tabela": "equipes"
+  },
+  {
+    "nome": "Faixa",
+    "plural": "Faixas",
+    "titulo": "Faixas",
+    "icone": "ribbon",
+    "grupo": "Configurações",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Cor",
+        "tipo": "string",
+        "rotulo": "Cor",
+        "entrada": "color",
+        "padrao": "#365bea"
+      },
+      {
+        "nome": "Ordem",
+        "tipo": "int",
+        "rotulo": "Ordem",
+        "min": 0,
+        "max": 999999
+      },
+      {
+        "nome": "MesesMinimos",
+        "tipo": "int",
+        "rotulo": "Meses para próxima graduação",
+        "min": 1,
+        "max": 120
+      }
+    ],
+    "tabela": "faixas"
+  },
+  {
+    "nome": "Grau",
+    "plural": "Graus",
+    "titulo": "Graus",
+    "icone": "bars",
+    "grupo": "Configurações",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Numero",
+        "tipo": "int",
+        "rotulo": "Número",
+        "min": 0,
+        "max": 10
+      }
+    ],
+    "tabela": "graus"
+  },
+  {
+    "nome": "Unidade",
+    "plural": "Unidades",
+    "titulo": "Unidades",
+    "icone": "building",
+    "grupo": "Gestão",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Tipo",
+        "tipo": "string",
+        "rotulo": "Tipo",
+        "opcoes": [
+          "Matriz",
+          "Filial"
+        ]
+      },
+      {
+        "nome": "ResponsavelId",
+        "tipo": "int?",
+        "rotulo": "Responsável",
+        "referencia": "Professores",
+        "obrigatorio": false
+      },
+      {
+        "nome": "Telefone",
+        "tipo": "string",
+        "rotulo": "Telefone"
+      },
+      {
+        "nome": "Whatsapp",
+        "tipo": "string",
+        "rotulo": "WhatsApp"
+      },
+      {
+        "nome": "Email",
+        "tipo": "string",
+        "rotulo": "E-mail",
+        "entrada": "email"
+      },
+      {
+        "nome": "Cep",
+        "tipo": "string",
+        "rotulo": "CEP"
+      },
+      {
+        "nome": "Endereco",
+        "tipo": "string",
+        "rotulo": "Endereço"
+      },
+      {
+        "nome": "Numero",
+        "tipo": "string",
+        "rotulo": "Número"
+      },
+      {
+        "nome": "Bairro",
+        "tipo": "string",
+        "rotulo": "Bairro"
+      },
+      {
+        "nome": "Cidade",
+        "tipo": "string",
+        "rotulo": "Cidade"
+      },
+      {
+        "nome": "Estado",
+        "tipo": "string",
+        "rotulo": "Estado"
+      },
+      {
+        "nome": "Complemento",
+        "tipo": "string",
+        "rotulo": "Complemento"
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo"
+        ]
+      }
+    ],
+    "tabela": "unidades"
+  },
+  {
+    "nome": "Professor",
+    "plural": "Professores",
+    "titulo": "Professores",
+    "icone": "user-ninja",
+    "grupo": "Gestão",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "UnidadeId",
+        "tipo": "int",
+        "rotulo": "Unidade",
+        "referencia": "Unidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Cpf",
+        "tipo": "string",
+        "rotulo": "CPF"
+      },
+      {
+        "nome": "DataNascimento",
+        "tipo": "DateTime?",
+        "rotulo": "Nascimento",
+        "entrada": "date",
+        "obrigatorio": false
+      },
+      {
+        "nome": "Telefone",
+        "tipo": "string",
+        "rotulo": "Telefone"
+      },
+      {
+        "nome": "Whatsapp",
+        "tipo": "string",
+        "rotulo": "WhatsApp"
+      },
+      {
+        "nome": "Email",
+        "tipo": "string",
+        "rotulo": "E-mail",
+        "entrada": "email"
+      },
+      {
+        "nome": "Foto",
+        "tipo": "string",
+        "rotulo": "Foto",
+        "entrada": "foto"
+      },
+      {
+        "nome": "FaixaId",
+        "tipo": "int",
+        "rotulo": "Faixa",
+        "referencia": "Faixas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "GrauId",
+        "tipo": "int",
+        "rotulo": "Grau",
+        "referencia": "Graus",
+        "obrigatorio": true
+      },
+      {
+        "nome": "DataEntrada",
+        "tipo": "DateTime",
+        "rotulo": "Entrada",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "DataGraduacao",
+        "tipo": "DateTime?",
+        "rotulo": "Graduação",
+        "entrada": "date",
+        "obrigatorio": false
+      },
+      {
+        "nome": "ProfessorResponsavelId",
+        "tipo": "int?",
+        "rotulo": "Professor responsável",
+        "referencia": "Professores",
+        "obrigatorio": false
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo"
+        ]
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "professores"
+  },
+  {
+    "nome": "Plano",
+    "plural": "Planos",
+    "titulo": "Planos",
+    "icone": "layer-group",
+    "grupo": "Financeiro",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Valor",
+        "tipo": "decimal",
+        "rotulo": "Valor mensal",
+        "min": 0.01,
+        "max": 9999999,
+        "entrada": "number"
+      },
+      {
+        "nome": "DiaVencimento",
+        "tipo": "int",
+        "rotulo": "Dia do vencimento",
+        "min": 1,
+        "max": 28
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo"
+        ]
+      }
+    ],
+    "tabela": "planos"
+  },
+  {
+    "nome": "Aluno",
+    "plural": "Alunos",
+    "titulo": "Alunos",
+    "icone": "users",
+    "grupo": "Gestão",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "UnidadeId",
+        "tipo": "int",
+        "rotulo": "Unidade",
+        "referencia": "Unidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Cpf",
+        "tipo": "string",
+        "rotulo": "CPF"
+      },
+      {
+        "nome": "DataNascimento",
+        "tipo": "DateTime?",
+        "rotulo": "Nascimento",
+        "entrada": "date",
+        "obrigatorio": false
+      },
+      {
+        "nome": "Sexo",
+        "tipo": "string",
+        "rotulo": "Sexo",
+        "opcoes": [
+          "Não informado",
+          "Feminino",
+          "Masculino"
+        ]
+      },
+      {
+        "nome": "Telefone",
+        "tipo": "string",
+        "rotulo": "Telefone"
+      },
+      {
+        "nome": "Whatsapp",
+        "tipo": "string",
+        "rotulo": "WhatsApp"
+      },
+      {
+        "nome": "Email",
+        "tipo": "string",
+        "rotulo": "E-mail",
+        "entrada": "email"
+      },
+      {
+        "nome": "Cep",
+        "tipo": "string",
+        "rotulo": "CEP"
+      },
+      {
+        "nome": "Endereco",
+        "tipo": "string",
+        "rotulo": "Endereço"
+      },
+      {
+        "nome": "Numero",
+        "tipo": "string",
+        "rotulo": "Número"
+      },
+      {
+        "nome": "Bairro",
+        "tipo": "string",
+        "rotulo": "Bairro"
+      },
+      {
+        "nome": "Cidade",
+        "tipo": "string",
+        "rotulo": "Cidade"
+      },
+      {
+        "nome": "Estado",
+        "tipo": "string",
+        "rotulo": "Estado"
+      },
+      {
+        "nome": "Foto",
+        "tipo": "string",
+        "rotulo": "Foto",
+        "entrada": "foto"
+      },
+      {
+        "nome": "DataInicio",
+        "tipo": "DateTime",
+        "rotulo": "Início",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "FaixaId",
+        "tipo": "int",
+        "rotulo": "Faixa",
+        "referencia": "Faixas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "GrauId",
+        "tipo": "int",
+        "rotulo": "Grau",
+        "referencia": "Graus",
+        "obrigatorio": true
+      },
+      {
+        "nome": "DataUltimaGraduacao",
+        "tipo": "DateTime?",
+        "rotulo": "Última graduação",
+        "entrada": "date",
+        "obrigatorio": false
+      },
+      {
+        "nome": "ProfessorResponsavelId",
+        "tipo": "int",
+        "rotulo": "Professor responsável",
+        "referencia": "Professores",
+        "obrigatorio": true
+      },
+      {
+        "nome": "PlanoId",
+        "tipo": "int?",
+        "rotulo": "Plano",
+        "referencia": "Planos",
+        "obrigatorio": false
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo",
+          "Trancado",
+          "Transferido"
+        ]
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "alunos"
+  },
+  {
+    "nome": "Turma",
+    "plural": "Turmas",
+    "titulo": "Turmas",
+    "icone": "people-group",
+    "grupo": "Gestão",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "UnidadeId",
+        "tipo": "int",
+        "rotulo": "Unidade",
+        "referencia": "Unidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "ProfessorId",
+        "tipo": "int",
+        "rotulo": "Professor",
+        "referencia": "Professores",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Descricao",
+        "tipo": "string",
+        "rotulo": "Descrição",
+        "entrada": "textarea"
+      },
+      {
+        "nome": "DiaSemana",
+        "tipo": "string",
+        "rotulo": "Dia da semana",
+        "opcoes": [
+          "Segunda-feira",
+          "Terça-feira",
+          "Quarta-feira",
+          "Quinta-feira",
+          "Sexta-feira",
+          "Sábado",
+          "Domingo"
+        ]
+      },
+      {
+        "nome": "HoraInicio",
+        "tipo": "string",
+        "rotulo": "Início",
+        "entrada": "time",
+        "obrigatorio": true,
+        "padrao": "19:00"
+      },
+      {
+        "nome": "HoraFim",
+        "tipo": "string",
+        "rotulo": "Término",
+        "entrada": "time",
+        "obrigatorio": true,
+        "padrao": "20:30"
+      },
+      {
+        "nome": "FaixaMinimaId",
+        "tipo": "int",
+        "rotulo": "Faixa mínima",
+        "referencia": "Faixas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "FaixaMaximaId",
+        "tipo": "int",
+        "rotulo": "Faixa máxima",
+        "referencia": "Faixas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Capacidade",
+        "tipo": "int",
+        "rotulo": "Capacidade",
+        "min": 1,
+        "max": 500
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo"
+        ]
+      }
+    ],
+    "tabela": "turmas"
+  },
+  {
+    "nome": "Matricula",
+    "plural": "Matriculas",
+    "tabela": "turma_alunos",
+    "titulo": "Matrículas",
+    "icone": "user-plus",
+    "grupo": "Treinamento",
+    "campos": [
+      {
+        "nome": "TurmaId",
+        "tipo": "int",
+        "rotulo": "Turma",
+        "referencia": "Turmas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "AlunoId",
+        "tipo": "int",
+        "rotulo": "Aluno",
+        "referencia": "Alunos",
+        "obrigatorio": true
+      }
+    ]
+  },
+  {
+    "nome": "Graduacao",
+    "plural": "Graduacoes",
+    "titulo": "Graduações",
+    "icone": "award",
+    "grupo": "Gestão",
+    "imutavel": true,
+    "campos": [
+      {
+        "nome": "AlunoId",
+        "tipo": "int",
+        "rotulo": "Aluno",
+        "referencia": "Alunos",
+        "obrigatorio": true
+      },
+      {
+        "nome": "ProfessorId",
+        "tipo": "int",
+        "rotulo": "Professor",
+        "referencia": "Professores",
+        "obrigatorio": true
+      },
+      {
+        "nome": "UnidadeId",
+        "tipo": "int",
+        "rotulo": "Unidade",
+        "referencia": "Unidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "FaixaAnteriorId",
+        "tipo": "int?",
+        "rotulo": "Faixa anterior",
+        "referencia": "Faixas",
+        "obrigatorio": false
+      },
+      {
+        "nome": "GrauAnteriorId",
+        "tipo": "int?",
+        "rotulo": "Grau anterior",
+        "referencia": "Graus",
+        "obrigatorio": false
+      },
+      {
+        "nome": "FaixaNovaId",
+        "tipo": "int",
+        "rotulo": "Nova faixa",
+        "referencia": "Faixas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "GrauNovoId",
+        "tipo": "int",
+        "rotulo": "Novo grau",
+        "referencia": "Graus",
+        "obrigatorio": true
+      },
+      {
+        "nome": "DataGraduacao",
+        "tipo": "DateTime",
+        "rotulo": "Data da graduação",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "graduacoes"
+  },
+  {
+    "nome": "Frequencia",
+    "plural": "Frequencia",
+    "tabela": "frequencias",
+    "titulo": "Frequência",
+    "icone": "calendar-check",
+    "grupo": "Treinamento",
+    "especial": true,
+    "campos": [
+      {
+        "nome": "TurmaId",
+        "tipo": "int",
+        "rotulo": "Turma",
+        "referencia": "Turmas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "AlunoId",
+        "tipo": "int",
+        "rotulo": "Aluno",
+        "referencia": "Alunos",
+        "obrigatorio": true
+      },
+      {
+        "nome": "UnidadeId",
+        "tipo": "int",
+        "rotulo": "Unidade",
+        "referencia": "Unidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Data",
+        "tipo": "DateTime",
+        "rotulo": "Data",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Presente",
+        "tipo": "bool",
+        "rotulo": "Presente"
+      }
+    ]
+  },
+  {
+    "nome": "Campeonato",
+    "plural": "Campeonatos",
+    "titulo": "Campeonatos",
+    "icone": "trophy",
+    "grupo": "Treinamento",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Data",
+        "tipo": "DateTime",
+        "rotulo": "Data",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Local",
+        "tipo": "string",
+        "rotulo": "Local"
+      },
+      {
+        "nome": "Cidade",
+        "tipo": "string",
+        "rotulo": "Cidade"
+      },
+      {
+        "nome": "Organizacao",
+        "tipo": "string",
+        "rotulo": "Organização"
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Inscrições abertas",
+          "Em andamento",
+          "Concluído",
+          "Cancelado"
+        ]
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "campeonatos"
+  },
+  {
+    "nome": "InscricaoCampeonato",
+    "plural": "Inscricoes",
+    "tabela": "inscricoes_campeonatos",
+    "titulo": "Inscrições de atletas",
+    "icone": "medal",
+    "grupo": "Treinamento",
+    "campos": [
+      {
+        "nome": "CampeonatoId",
+        "tipo": "int",
+        "rotulo": "Campeonato",
+        "referencia": "Campeonatos",
+        "obrigatorio": true
+      },
+      {
+        "nome": "AlunoId",
+        "tipo": "int",
+        "rotulo": "Aluno",
+        "referencia": "Alunos",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Categoria",
+        "tipo": "string",
+        "rotulo": "Categoria",
+        "obrigatorio": true
+      },
+      {
+        "nome": "FaixaId",
+        "tipo": "int",
+        "rotulo": "Faixa",
+        "referencia": "Faixas",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Peso",
+        "tipo": "decimal",
+        "rotulo": "Peso (kg)",
+        "min": 0.01,
+        "max": 9999999,
+        "entrada": "number"
+      },
+      {
+        "nome": "Idade",
+        "tipo": "int",
+        "rotulo": "Idade",
+        "min": 3,
+        "max": 100
+      },
+      {
+        "nome": "Resultado",
+        "tipo": "string",
+        "rotulo": "Resultado",
+        "opcoes": [
+          "Inscrito",
+          "1º Lugar",
+          "2º Lugar",
+          "3º Lugar",
+          "Participação"
+        ]
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ]
+  },
+  {
+    "nome": "Evento",
+    "plural": "Eventos",
+    "titulo": "Eventos",
+    "icone": "calendar-days",
+    "grupo": "Treinamento",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Tipo",
+        "tipo": "string",
+        "rotulo": "Tipo",
+        "opcoes": [
+          "Seminário",
+          "Aula especial",
+          "Workshop",
+          "Graduação",
+          "Confraternização",
+          "Campeonato"
+        ]
+      },
+      {
+        "nome": "Data",
+        "tipo": "DateTime",
+        "rotulo": "Data",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Local",
+        "tipo": "string",
+        "rotulo": "Local"
+      },
+      {
+        "nome": "UnidadeId",
+        "tipo": "int",
+        "rotulo": "Unidade",
+        "referencia": "Unidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "eventos"
+  },
+  {
+    "nome": "Mensalidade",
+    "plural": "Mensalidades",
+    "titulo": "Mensalidades",
+    "icone": "wallet",
+    "grupo": "Financeiro",
+    "campos": [
+      {
+        "nome": "AlunoId",
+        "tipo": "int",
+        "rotulo": "Aluno",
+        "referencia": "Alunos",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Competencia",
+        "tipo": "string",
+        "rotulo": "Competência",
+        "entrada": "month",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Vencimento",
+        "tipo": "DateTime",
+        "rotulo": "Vencimento",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Valor",
+        "tipo": "decimal",
+        "rotulo": "Valor",
+        "min": 0.01,
+        "max": 9999999,
+        "entrada": "number"
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Pendente",
+          "Cancelado"
+        ]
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "mensalidades"
+  },
+  {
+    "nome": "Recebimento",
+    "plural": "Recebimentos",
+    "titulo": "Recebimentos",
+    "icone": "money-bill-transfer",
+    "grupo": "Financeiro",
+    "imutavel": true,
+    "campos": [
+      {
+        "nome": "MensalidadeId",
+        "tipo": "int",
+        "rotulo": "Mensalidade",
+        "referencia": "Mensalidades",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Data",
+        "tipo": "DateTime",
+        "rotulo": "Data do recebimento",
+        "entrada": "date",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Valor",
+        "tipo": "decimal",
+        "rotulo": "Valor recebido",
+        "min": 0.01,
+        "max": 9999999,
+        "entrada": "number"
+      },
+      {
+        "nome": "FormaPagamento",
+        "tipo": "string",
+        "rotulo": "Forma de pagamento",
+        "opcoes": [
+          "PIX",
+          "Dinheiro",
+          "Cartão",
+          "Transferência"
+        ]
+      },
+      {
+        "nome": "Observacoes",
+        "tipo": "string",
+        "rotulo": "Observações",
+        "entrada": "textarea"
+      }
+    ],
+    "tabela": "recebimentos"
+  },
+  {
+    "nome": "Usuario",
+    "plural": "Usuarios",
+    "titulo": "Usuários",
+    "icone": "user-shield",
+    "grupo": "Configurações",
+    "campos": [
+      {
+        "nome": "Nome",
+        "tipo": "string",
+        "rotulo": "Nome",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Email",
+        "tipo": "string",
+        "rotulo": "E-mail",
+        "entrada": "email",
+        "obrigatorio": true
+      },
+      {
+        "nome": "Perfil",
+        "tipo": "string",
+        "rotulo": "Perfil",
+        "opcoes": [
+          "Administrador",
+          "Professor",
+          "Secretaria",
+          "Aluno"
+        ]
+      },
+      {
+        "nome": "AlunoId",
+        "tipo": "int?",
+        "rotulo": "Aluno vinculado",
+        "referencia": "Alunos",
+        "obrigatorio": false
+      },
+      {
+        "nome": "Status",
+        "tipo": "string",
+        "rotulo": "Status",
+        "opcoes": [
+          "Ativo",
+          "Inativo"
+        ]
+      }
+    ],
+    "tabela": "usuarios"
+  }
+]

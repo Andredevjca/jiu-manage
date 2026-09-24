@@ -1,0 +1,51 @@
+@model FormularioModelo
+@{var editar=Model.Registro.Id>0;ViewData["Title"]=(editar?"Editar · ":"Novo · ")+Model.Modulo.Titulo;}
+<div class="breadcrumb-linha">@Model.Modulo.Grupo <span>/</span>
+<a href="/@Model.Modulo.Plural">@Model.Modulo.Titulo</a>
+<span>/</span>@(editar?"Editar":"Novo cadastro")</div>
+<div class="cabecalho-pagina">
+<div>
+<h1>@(editar?"Editar cadastro":"Novo cadastro")</h1>
+<p>@Model.Modulo.Titulo · Preencha as informações abaixo.</p>
+</div>
+<a href="/@Model.Modulo.Plural" class="btn btn-light">
+<i class="fa-solid fa-arrow-left me-2">
+</i>Voltar</a>
+</div>
+<form action="/@Model.Modulo.Plural/Salvar" method="post" enctype="multipart/form-data" class="painel formulario">@Html.AntiForgeryToken()<input type="hidden" name="Id" value="@Model.Registro.Id"/>
+<div asp-validation-summary="All" class="text-danger mb-3">
+</div>
+<div class="titulo-secao">
+<span class="icone-secao">
+<i class="fa-solid fa-@Model.Modulo.Icone">
+</i>
+</span>
+<div>
+<h2>Informações do cadastro</h2>
+<p>Os campos com * são obrigatórios.</p>
+</div>
+</div>
+<div class="row g-4">
+@foreach(var campo in Model.Modulo.Campos){var propriedade=Model.Registro.GetType().GetProperty(campo.Nome)!;var valor=propriedade.GetValue(Model.Registro);var bloqueado=Model.Modulo.Nome=="Aluno"&&editar&&(campo.Nome is "FaixaId" or "GrauId" or "DataUltimaGraduacao");if(Model.Modulo.Nome=="Graduacao"&&(campo.Nome is "FaixaAnteriorId" or "GrauAnteriorId")){continue;}<div class="@(campo.Entrada=="textarea"?"col-12":"col-md-6 col-xl-4")">
+<label class="form-label" for="@campo.Nome">@campo.Rotulo @(campo.Obrigatorio?"*":"")</label>
+@if(campo.Referencia!=null){<select id="@campo.Nome" name="@campo.Nome" class="form-select" required="@campo.Obrigatorio" disabled="@bloqueado">
+<option value="">Selecione...</option>@foreach(var opcao in Model.Opcoes[campo.Referencia]){<option value="@opcao.Key" selected="@(valor?.ToString()==opcao.Key.ToString())">@opcao.Value</option>}</select>if(bloqueado){<input type="hidden" name="@campo.Nome" value="@valor"/>
+<small class="text-muted">Atualizado pelo módulo Graduações.</small>}}
+else if(campo.Opcoes!=null){<select id="@campo.Nome" name="@campo.Nome" class="form-select">@foreach(var opcao in campo.Opcoes){<option selected="@(valor?.ToString()==opcao)">@opcao</option>}</select>}
+else if(campo.Entrada=="foto"){if(valor is string foto&&!string.IsNullOrEmpty(foto)){<img class="avatar mb-2" src="@foto" alt="Imagem atual"/>}<input type="file" name="imagem" id="@campo.Nome" accept="image/jpeg,image/png,image/webp" class="form-control"/>
+<small class="text-muted">JPG, PNG ou WebP. Até 3 MB.</small>}
+else if(campo.Entrada=="textarea"){<textarea id="@campo.Nome" name="@campo.Nome" class="form-control" rows="4" maxlength="2000">@valor</textarea>}
+else{var entrada=campo.Entrada??(campo.Tipo=="int"||campo.Tipo=="decimal"?"number":"text");var texto=valor is DateTime data?data.ToString("yyyy-MM-dd"):valor is decimal numero?numero.ToString(System.Globalization.CultureInfo.InvariantCulture):valor?.ToString();<input id="@campo.Nome" name="@campo.Nome" type="@entrada" value="@texto" class="form-control" required="@campo.Obrigatorio" min="@campo.Min" max="@campo.Max" step="@(campo.Tipo=="decimal"?"0.01":null)" maxlength="2000" readonly="@bloqueado"/>}</div>}
+@if(Model.Modulo.Nome=="Usuario"){<div class="col-md-6">
+<label for="novaSenha" class="form-label">@(editar?"Nova senha (opcional)":"Senha *")</label>
+<input id="novaSenha" name="novaSenha" type="password" minlength="8" maxlength="128" autocomplete="new-password" required="@(!editar)" class="form-control"/>
+<small>Use no mínimo 8 caracteres.</small>
+</div>}
+</div>
+<div class="rodape-formulario">
+<a href="/@Model.Modulo.Plural" class="btn btn-light">Cancelar</a>
+<button class="btn btn-primary">
+<i class="fa-solid fa-check me-2">
+</i>Salvar cadastro</button>
+</div>
+</form>

@@ -1,0 +1,43 @@
+@model Dictionary<string,object?>
+@{ViewData["Title"]="Carteirinha digital";}
+<div class="cabecalho-pagina">
+<div>
+<h1>Carteirinha digital</h1>
+<p>A identidade de quem faz parte da equipe.</p>
+</div>
+<button class="btn btn-primary" data-imprimir>
+<i class="fa-solid fa-print me-2">
+</i>Imprimir / Salvar PDF</button>
+</div>
+<section class="cartao-digital">
+<div class="marca">@if(Model["Logo"] is string logo&&!string.IsNullOrEmpty(logo)){<img src="@logo" width="45" alt="Logo da equipe"/>}else{<span class="marca-simbolo">柔</span>}<span>@Model["Equipe"]<small>IDENTIDADE DO ATLETA</small>
+</span>
+</div>
+<div class="d-flex align-items-center gap-3 mb-3">@if(Model["Foto"] is string foto&&!string.IsNullOrEmpty(foto)){<img class="foto-perfil" src="@foto" alt="Foto do atleta"/>}<div>
+<h1>@Model["Nome"]</h1>
+<span class="status positivo">@Model["Status"]</span>
+</div>
+</div>
+<div class="d-flex align-items-end justify-content-between">
+<dl class="row flex-grow-1 mb-0">
+<div class="col-6">
+<dt>MATRÍCULA</dt>
+<dd>@Convert.ToInt32(Model["Id"]).ToString("D6")</dd>
+</div>
+<div class="col-6">
+<dt>FAIXA / GRAU</dt>
+<dd>@Model["Faixa"] · @Model["Grau"]</dd>
+</div>
+<div class="col-12">
+<dt>UNIDADE</dt>
+<dd>@Model["Unidade"]</dd>
+</div>
+</dl>
+<img class="qr-code" src="@Model["QrCode"]" alt="QR Code para validar a carteirinha"/>
+</div>
+</section>
+<p class="text-center mt-4 nao-imprimir">
+<a href="@Model["EnderecoValidacao"]" target="_blank" rel="noopener">Abrir página de validação <i class="fa-solid fa-arrow-up-right-from-square ms-1">
+</i>
+</a>
+</p>

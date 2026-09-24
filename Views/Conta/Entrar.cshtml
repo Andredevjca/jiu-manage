@@ -1,0 +1,73 @@
+@model LoginModelo
+@{ViewData["Title"]="Entrar";}
+<div class="login-layout">
+<section class="login-manifesto">
+<a class="marca" href="/Conta/Entrar">
+<span class="marca-simbolo">柔</span>
+<span>Jiu<span class="marca-leve">Manager</span>
+</span>
+</a>
+<div class="arte-tatame">
+<div class="anel anel-um">
+</div>
+<div class="anel anel-dois">
+</div>
+<span class="ideograma">柔<br/>術</span>
+<span class="linha-tatame">
+</span>
+</div>
+<div class="manifesto">
+<span class="sobretitulo">NO TATAME E NA GESTÃO</span>
+<h1>Uma equipe forte.<br/>Uma gestão à altura.</h1>
+<p>Mais tempo para ensinar, evoluir e conquistar.<br/>O resto, a gente organiza com você.</p>
+<div class="pilares">
+<span>
+<i class="fa-solid fa-shield-halved">
+</i>Disciplina</span>
+<span>
+<i class="fa-solid fa-people-group">
+</i>União</span>
+<span>
+<i class="fa-solid fa-arrow-trend-up">
+</i>Evolução</span>
+</div>
+</div>
+<small class="copyright-login">JiuManager · Gestão completa para sua equipe de Jiu-Jitsu</small>
+</section>
+<section class="login-formulario">
+<div class="caixa-login">
+<span class="etiqueta-clara">
+<i class="fa-solid fa-circle ponto-online">
+</i> SEU PRÓXIMO NÍVEL COMEÇA AQUI</span>
+<h2>Bem-vindo de volta.</h2>
+<p>Entre para acompanhar sua equipe.</p>@if(TempData["Sucesso"]!=null){<div class="alert alert-success">@TempData["Sucesso"]</div>}<form method="post" asp-action="Entrar">
+<input type="hidden" asp-for="Retorno"/>
+<div asp-validation-summary="All" class="text-danger">
+</div>
+<label asp-for="Email" class="form-label">E-mail</label>
+<div class="input-login">
+<i class="fa-regular fa-envelope">
+</i>
+<input asp-for="Email" type="email" required autocomplete="username" placeholder="seu@email.com"/>
+</div>
+<label asp-for="Senha" class="form-label mt-4">Senha</label>
+<div class="input-login">
+<i class="fa-solid fa-lock">
+</i>
+<input asp-for="Senha" type="password" required autocomplete="current-password" placeholder="Digite sua senha"/>
+<button type="button" data-senha="Senha" aria-label="Mostrar ou ocultar senha">
+<i class="fa-regular fa-eye">
+</i>
+</button>
+</div>
+<button class="btn btn-primary w-100 mt-4 py-3">Entrar na plataforma <i class="fa-solid fa-arrow-right ms-2">
+</i>
+</button>
+</form>
+<div class="seguranca-login">
+<i class="fa-solid fa-shield-halved">
+</i> Ambiente seguro para sua equipe</div>
+</div>
+<small class="rodape-login">Organização fora do tatame. Excelência dentro dele.</small>
+</section>
+</div>
