@@ -1,32 +1,33 @@
 @model Dictionary<string,object?>
-@{ViewData["Title"]="Certificado de graduação";}
-<div class="cabecalho-pagina">
-<div>
-<h1>Uma conquista para guardar</h1>
-<p>Certificado emitido a partir do histórico de graduação.</p>
+@{ViewData["Title"] = "Certificado de graduação";}
+<div class="titulo-pagina">
+    <div><span class="eyebrow">Documentos</span>
+        <h1>Uma conquista para guardar</h1>
+        <p>Certificado emitido a partir do histórico de graduação.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <form method="post" action="/Certificados/Gerar">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model["Id"]" />
+            <button class="btn btn-light">Registrar emissão</button>
+        </form>
+        <button type="button" class="btn btn-primary" data-imprimir>
+            <i class="fa-solid fa-print"></i> Imprimir / Salvar PDF</button>
+    </div>
 </div>
-<form method="post" action="/Certificados/Gerar" class="d-flex gap-2">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model["Id"]"/>
-<button class="btn btn-light">Registrar emissão</button>
-<button type="button" class="btn btn-primary" data-imprimir>
-<i class="fa-solid fa-print me-2">
-</i>Imprimir / Salvar PDF</button>
-</form>
-</div>
-<article class="certificado">@if(Model["Logo"] is string logo&&!string.IsNullOrEmpty(logo)){<img src="@logo" height="70" alt="Logo da equipe"/>}<div class="sobretitulo">@Model["Equipe"] · JIU-JITSU</div>
-<h1>CERTIFICADO DE GRADUAÇÃO</h1>
-<p>Certificamos que</p>
-<div class="nome-certificado">@Model["Aluno"]</div>
-<p>pelo seu comprometimento, disciplina e evolução técnica,<br/>foi graduado à faixa</p>
-<h2 class="fs-3 my-4">@Model["Faixa"] · @Model["Grau"]</h2>
-<p>@Convert.ToDateTime(Model["DataGraduacao"]).ToString("dd 'de' MMMM 'de' yyyy")</p>
-<div class="assinaturas">
-<div>
-<strong>@Model["Professor"]</strong>
-<p>Professor responsável</p>
-</div>
-<div>
-<strong>@Model["Equipe"]</strong>
-<p>Equipe de Jiu-Jitsu</p>
-</div>
-</div>
+<article class="certificado">@if (Model["Logo"] is string logo && !string.IsNullOrEmpty(logo)) { <img src="@logo" height="70" alt="Logo da equipe" /> } <div class="sobretitulo">@Model["Equipe"] · JIU-JITSU</div>
+    <h1>CERTIFICADO DE GRADUAÇÃO</h1>
+    <p>Certificamos que</p>
+    <div class="nome-certificado">@Model["Aluno"]</div>
+    <p>pelo seu comprometimento, disciplina e evolução técnica,<br />foi graduado à faixa</p>
+    <h2 class="fs-3 my-4">@Model["Faixa"] · @Model["Grau"]</h2>
+    <p>@Convert.ToDateTime(Model["DataGraduacao"]).ToString("dd 'de' MMMM 'de' yyyy")</p>
+    <div class="assinaturas">
+        <div>
+            <strong>@Model["Professor"]</strong>
+            <p>Professor responsável</p>
+        </div>
+        <div>
+            <strong>@Model["Equipe"]</strong>
+            <p>Equipe de Jiu-Jitsu</p>
+        </div>
+    </div>
 </article>

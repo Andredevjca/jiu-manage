@@ -1,12 +1,6 @@
-@{ViewData["Title"]="Alterar senha";}
-<div class="breadcrumb-linha">Minha conta <span>/</span> Segurança</div>
-<div class="cabecalho-pagina">
-<div>
-<h1>Alterar senha</h1>
-<p>Escolha uma senha pessoal com pelo menos 8 caracteres.</p>
-</div>
-</div>
-<form method="post" class="painel formulario formulario-curto">@Html.AntiForgeryToken()<div asp-validation-summary="All" class="text-danger">
-</div>@foreach(var campo in new[]{("atual","Senha atual"),("nova","Nova senha"),("confirmacao","Confirme a nova senha")}){<label for="@campo.Item1" class="form-label mt-3">@campo.Item2</label>
-<input type="password" id="@campo.Item1" name="@campo.Item1" required class="form-control" autocomplete="@(campo.Item1=="atual"?"current-password":"new-password")"/>}<button class="btn btn-primary mt-4">Salvar nova senha</button>
+@{Layout="_LayoutConta"; ViewData["Title"]="Alterar senha";}
+<span class="eyebrow">SEGURANÇA DA CONTA</span><h1>Alterar senha</h1><p class="muted">Escolha uma senha pessoal com pelo menos 8 caracteres.</p>
+<form method="post" class="conta-form">@Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation"></div>
+@foreach(var campo in new[]{("atual","Senha atual"),("nova","Nova senha"),("confirmacao","Confirme a nova senha")}){<label for="@campo.Item1">@campo.Item2</label>
+<input type="password" id="@campo.Item1" name="@campo.Item1" required autocomplete="@(campo.Item1=="atual"?"current-password":"new-password")" />}<button class="btn btn-primary w-100 mt-4">Salvar nova senha</button>
 </form>

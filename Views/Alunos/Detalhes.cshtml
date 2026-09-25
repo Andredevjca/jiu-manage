@@ -1,77 +1,82 @@
 @model DetalhesModelo
 @inject JiuManager.Services.PermissaoServico Permissoes
-@{var aluno=(Aluno)Model.Registro;ViewData["Title"]=aluno.Nome;var portal=User.IsInRole("Aluno");var financeiro=portal||await Permissoes.PodeAsync("Mensalidades","visualizar");}
-<div class="breadcrumb-linha">Gestão <span>/</span> Alunos <span>/</span> Perfil do atleta</div>
+@{var aluno = (Aluno)Model.Registro; ViewData["Title"] = aluno.Nome; var portal = User.IsInRole("Aluno"); var financeiro = portal || await Permissoes.PodeAsync("Mensalidades", "visualizar");}
+<div class="titulo-pagina">
+    <div><span class="eyebrow">Gestão</span>
+        <h1>@aluno.Nome</h1>
+        <p>Perfil do atleta · Matrícula @aluno.Id.ToString("D6")</p>
+    </div>
+    <div class="d-flex gap-2">
+        @if (await Permissoes.PodeAsync("Alunos", "editar")) { <a href="/Alunos/Editar/@aluno.Id" class="btn btn-light">
+                <i class="fa-regular fa-pen-to-square"></i> Editar</a> } @if (portal || await Permissoes.PodeAsync("Carteirinhas", "visualizar")) { <a href="@(portal ? "/Portal/Carteirinha" : "/Carteirinhas/Visualizar/" + aluno.Id)" class="btn btn-primary">
+                <i class="fa-regular fa-id-card"></i> Carteirinha</a> }
+    </div>
+</div>
 <section class="painel">
-<div class="perfil-capa">
-</div>
-<div class="perfil-cabecalho">@if(!string.IsNullOrEmpty(aluno.Foto)){<img src="@aluno.Foto" class="avatar" alt="Foto de @aluno.Nome"/>}else{<span class="avatar">@HelperFormatacao.Iniciais(aluno.Nome)</span>}<div>
-<h1>@aluno.Nome</h1>
-<span class="status @(aluno.Status=="Ativo"?"positivo":"neutro")">@aluno.Status</span>
-<span class="faixa-etiqueta ms-2">@Model.Opcoes["Faixas"].GetValueOrDefault(aluno.FaixaId) · @Model.Opcoes["Graus"].GetValueOrDefault(aluno.GrauId)</span>
-<p>Matrícula @aluno.Id.ToString("D6") <span class="mx-2">·</span> Na equipe desde @aluno.DataInicio.ToString("dd/MM/yyyy")</p>
-</div>
-<div class="perfil-acoes">@if(await Permissoes.PodeAsync("Alunos","editar")){<a href="/Alunos/Editar/@aluno.Id" class="btn btn-light">
-<i class="fa-regular fa-pen-to-square me-2">
-</i>Editar</a>}@if(portal||await Permissoes.PodeAsync("Carteirinhas","visualizar")){<a href="@(portal?"/Portal/Carteirinha":"/Carteirinhas/Visualizar/"+aluno.Id)" class="btn btn-primary">
-<i class="fa-regular fa-id-card me-2">
-</i>Carteirinha</a>}</div>
-</div>
-<nav class="nav-perfil" role="tablist" aria-label="Informações do aluno">@foreach(var aba in new[]{("dados","Dados pessoais"),("graduacoes","Graduações"),("frequencia","Frequência"),("financeiro","Financeiro"),("campeonatos","Campeonatos")}.Where(a=>financeiro||a.Item1!="financeiro")){<button type="button" role="tab" class="@(aba.Item1=="dados"?"ativo":"")" data-aba="@aba.Item1" aria-selected="@(aba.Item1=="dados"?"true":"false")">@aba.Item2</button>}</nav>
-<div id="dados" class="aba-perfil" role="tabpanel">
-<dl class="row g-4">@foreach(var campo in Model.Modulo.Campos.Where(c=>c.Entrada!="foto")){<div class="col-md-4">
-<dt>@campo.Rotulo</dt>
-<dd>@HelperFormatacao.Valor(typeof(Aluno).GetProperty(campo.Nome)!.GetValue(aluno),campo,Model.Opcoes)</dd>
-</div>}</dl>
-</div>
-<div id="graduacoes" class="aba-perfil" role="tabpanel" hidden>
-<h2 class="mb-4">Cada conquista faz parte da sua história</h2>
-<div class="linha-tempo">@foreach(var graduacao in Model.Graduacoes){<div class="marco-graduacao">
-<small>@Convert.ToDateTime(graduacao["DataGraduacao"]).ToString("dd 'de' MMMM 'de' yyyy")</small>
-<h3>@graduacao["Faixa"] · @graduacao["Grau"]</h3>
-<p>Professor @graduacao["Professor"] · @graduacao["Unidade"]</p>
-</div>}<div class="marco-graduacao">
-<small>@aluno.DataInicio.ToString("dd/MM/yyyy")</small>
-<h3>O início da jornada</h3>
-<p>Ingresso na equipe.</p>
-</div>
-</div>
-</div>
-<div id="frequencia" class="aba-perfil" role="tabpanel" hidden>
-<h2>Presença é evolução</h2>
-<div class="numero-grande my-3">@Model.Frequencia%</div>
-<p class="text-muted">Percentual de presença entre todas as chamadas registradas para este aluno.</p>
-</div>
-<div id="financeiro" class="aba-perfil" role="tabpanel" hidden>
-<h2 class="mb-4">Histórico financeiro</h2>
-<div class="table-responsive">
-<table class="table tabela">
-<thead>
-<tr>
-<th>Competência</th>
-<th>Vencimento</th>
-<th>Valor</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>@foreach(var mensalidade in Model.Mensalidades){var status=mensalidade["Status"]?.ToString()=="Pendente"&&Convert.ToDateTime(mensalidade["Vencimento"])<DateTime.Today?"Atrasado":mensalidade["Status"]?.ToString();<tr>
-<td>@mensalidade["Competencia"]</td>
-<td>@Convert.ToDateTime(mensalidade["Vencimento"]).ToString("dd/MM/yyyy")</td>
-<td>@Convert.ToDecimal(mensalidade["Valor"]).ToString("C")</td>
-<td>
-<span class="status @(status=="Pago"?"positivo":"neutro")">@status</span>
-</td>
-</tr>}</tbody>
-</table>@if(Model.Mensalidades.Count==0){<p class="text-muted py-4">Nenhuma mensalidade registrada.</p>}</div>
-</div>
-<div id="campeonatos" class="aba-perfil" role="tabpanel" hidden>
-<h2 class="mb-4">Participações e conquistas</h2>@foreach(var campeonato in Model.Campeonatos){<div class="faixa-acao">
-<i class="fa-solid fa-trophy">
-</i>
-<div>
-<strong>@campeonato["Nome"]</strong>
-<small>@campeonato["Categoria"]</small>
-</div>
-<span class="status neutro">@campeonato["Resultado"]</span>
-</div>}@if(Model.Campeonatos.Count==0){<p class="text-muted py-4">Nenhuma participação registrada.</p>}</div>
+    <div class="perfil-capa">
+    </div>
+    <div class="perfil-cabecalho">@if (!string.IsNullOrEmpty(aluno.Foto)) { <img src="@aluno.Foto" class="avatar" alt="Foto de @aluno.Nome" /> } else { <span class="avatar">@HelperFormatacao.Iniciais(aluno.Nome)</span> } <div>
+            <h1>@aluno.Nome</h1>
+            <span class="status @(aluno.Status == "Ativo" ? "positivo" : "neutro")">@aluno.Status</span>
+            <span class="faixa-etiqueta">@Model.Opcoes["Faixas"].GetValueOrDefault(aluno.FaixaId) · @Model.Opcoes["Graus"].GetValueOrDefault(aluno.GrauId)</span>
+            <p>Matrícula @aluno.Id.ToString("D6") <span class="mx-2">·</span> Na equipe desde @aluno.DataInicio.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+    <nav class="nav-perfil" role="tablist" aria-label="Informações do aluno">@foreach (var aba in new[] { ("dados", "Dados pessoais"), ("graduacoes", "Graduações"), ("frequencia", "Frequência"), ("financeiro", "Financeiro"), ("campeonatos", "Campeonatos") }.Where(a => financeiro || a.Item1 != "financeiro")) { <button type="button" role="tab" class="@(aba.Item1 == "dados" ? "ativo" : "")" data-aba="@aba.Item1" aria-selected="@(aba.Item1 == "dados" ? "true" : "false")">@aba.Item2</button> }</nav>
+    <div id="dados" class="aba-perfil" role="tabpanel">
+        <dl class="row g-4">@foreach (var campo in Model.Modulo.Campos.Where(c => c.Entrada != "foto")) { <div class="col-md-4">
+                <dt>@campo.Rotulo</dt>
+                <dd>@HelperFormatacao.Valor(typeof(Aluno).GetProperty(campo.Nome)!.GetValue(aluno), campo, Model.Opcoes)</dd>
+            </div> }</dl>
+    </div>
+    <div id="graduacoes" class="aba-perfil" role="tabpanel" hidden>
+        <h2 class="mb-4">Cada conquista faz parte da sua história</h2>
+        <div class="linha-tempo">@foreach (var graduacao in Model.Graduacoes) { <div class="marco-graduacao">
+                    <small>@Convert.ToDateTime(graduacao["DataGraduacao"]).ToString("dd 'de' MMMM 'de' yyyy")</small>
+                    <h3>@graduacao["Faixa"] · @graduacao["Grau"]</h3>
+                    <p>Professor @graduacao["Professor"] · @graduacao["Unidade"]</p>
+                </div> } <div class="marco-graduacao">
+                <small>@aluno.DataInicio.ToString("dd/MM/yyyy")</small>
+                <h3>O início da jornada</h3>
+                <p>Ingresso na equipe.</p>
+            </div>
+        </div>
+    </div>
+    <div id="frequencia" class="aba-perfil" role="tabpanel" hidden>
+        <h2>Presença é evolução</h2>
+        <div class="numero-grande my-3">@Model.Frequencia%</div>
+        <p class="text-muted">Percentual de presença entre todas as chamadas registradas para este aluno.</p>
+    </div>
+    <div id="financeiro" class="aba-perfil" role="tabpanel" hidden>
+        <h2 class="mb-4">Histórico financeiro</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Competência</th>
+                        <th>Vencimento</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>@foreach (var mensalidade in Model.Mensalidades) { var status = mensalidade["Status"]?.ToString() == "Pendente" && Convert.ToDateTime(mensalidade["Vencimento"]) < DateTime.Today ? "Atrasado" : mensalidade["Status"]?.ToString(); <tr>
+                        <td>@mensalidade["Competencia"]</td>
+                        <td>@Convert.ToDateTime(mensalidade["Vencimento"]).ToString("dd/MM/yyyy")</td>
+                        <td>@Convert.ToDecimal(mensalidade["Valor"]).ToString("C")</td>
+                        <td>
+                            <span class="status @(status == "Pago" ? "positivo" : "neutro")">@status</span>
+                        </td>
+                    </tr> }</tbody>
+            </table>@if (Model.Mensalidades.Count == 0) { <p class="text-muted py-4">Nenhuma mensalidade registrada.</p> }</div>
+    </div>
+    <div id="campeonatos" class="aba-perfil" role="tabpanel" hidden>
+        <h2 class="mb-4">Participações e conquistas</h2>@foreach (var campeonato in Model.Campeonatos) { <div class="faixa-acao">
+                <i class="fa-solid fa-trophy">
+                </i>
+                <div>
+                    <strong>@campeonato["Nome"]</strong>
+                    <small>@campeonato["Categoria"]</small>
+                </div>
+                <span class="status neutro">@campeonato["Resultado"]</span>
+            </div> } @if (Model.Campeonatos.Count == 0) { <p class="text-muted py-4">Nenhuma participação registrada.</p> }</div>
 </section>

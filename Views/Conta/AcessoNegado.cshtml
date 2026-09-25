@@ -1,7 +1,13 @@
-@{ ViewData["Title"]="Acesso restrito"; }<section class="estado-vazio painel m-4">
-<i class="fa-solid fa-lock">
-</i>
-<h1>Acesso restrito</h1>
-<p>Seu perfil não possui permissão para esta operação.</p>
-<a href="/Conta/Senha" class="btn btn-primary">Minha conta</a>
-</section>
+@{ViewData["Title"] = "Acesso restrito"; Layout = "_Layout";}
+<div class="titulo-pagina">
+    <div><span class="eyebrow">Acesso negado</span>
+        <h1>Acesso restrito</h1>
+        <p>Seu perfil não possui permissão para esta operação.</p>
+    </div>
+</div>
+<div class="estado-vazio painel">
+    <i class="fa-solid fa-lock vazio-icone"></i>
+    <h3>Acesso restrito</h3>
+    <p>Seu perfil não possui permissão para esta operação.</p>
+    <a href="/Conta/Perfil" class="btn btn-primary">Minha conta</a>
+</div>

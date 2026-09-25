@@ -1,0 +1,66 @@
+@inject CatalogoModulos Catalogo
+@inject JiuManager.Services.PermissaoServico Permissoes
+@inject JiuManager.Repositories.ConsultaRepositorio Consultas
+@inject ContextoEquipe Contexto
+@{
+    var autenticado = User.Identity?.IsAuthenticated == true;
+    var moduloAtual = ViewContext.RouteData.Values["controller"]?.ToString();
+    var aluno = User.IsInRole("Aluno");
+    var unidades = autenticado && !aluno ? await Consultas.ListarAsync("Unidades") : new List<Dictionary<string, object?>>();
+    var equipe = autenticado ? (await Consultas.ListarAsync("Equipes")).FirstOrDefault()?.GetValueOrDefault("Nome")?.ToString() : "JiuManager";
+}
+<a class="marca" href="@(aluno ? "/Portal" : "/Dashboard")"><span class="marca-icone"><i class="fa-solid fa-arrow-trend-up"></i></span>Jiu<span class="mais">Manager</span></a>
+<div class="sidebar-scroll">
+    <div class="nav-legenda">SEU ESPAÇO</div>
+    <nav aria-label="Navegação principal">
+        @if (!aluno)
+        {
+            <a class="nav-item @(moduloAtual == "Dashboard" ? "ativo" : "")" href="/Dashboard"><i class="fa-solid fa-chart-pie"></i><span>Visão geral</span></a>
+        }
+        @if (aluno)
+        {
+            <a class="nav-item @(moduloAtual == "Portal" ? "ativo" : "")" href="/Portal"><i class="fa-solid fa-user"></i><span>Meu perfil</span></a>
+            <a class="nav-item @(moduloAtual == "Carteirinha" ? "ativo" : "")" href="/Portal/Carteirinha"><i class="fa-solid fa-id-card"></i><span>Minha carteirinha</span></a>
+        }
+        @foreach (var grupo in new[] { "Gestão", "Treinamento", "Financeiro", "Configurações" })
+        {
+            var visiveis = new List<Modulo>();
+            foreach (var modulo in Catalogo.Todos.Where(m => m.Grupo == grupo))
+            {
+                if (await Permissoes.PodeAsync(modulo.Plural, "visualizar")) visiveis.Add(modulo);
+            }
+            if (visiveis.Count > 0)
+            {
+                <div class="nav-legenda">@grupo</div>
+                @foreach (var modulo in visiveis)
+                {
+                    <a class="nav-item @(moduloAtual == modulo.Plural ? "ativo" : "")" href="/@modulo.Plural"><i class="fa-solid fa-@modulo.Icone"></i><span>@modulo.Titulo</span></a>
+                }
+                if (grupo == "Financeiro")
+                {
+                    <a class="nav-item @(moduloAtual == "Mensalidades" ? "ativo" : "")" href="/Mensalidades?status=Atrasado"><i class="fa-regular fa-clock"></i><span>Inadimplência</span></a>
+                }
+            }
+        }
+        @if (await Permissoes.PodeAsync("Relatorios", "visualizar"))
+        {
+            <div class="nav-legenda">Análise e documentos</div>
+            <a class="nav-item @(moduloAtual == "Relatorios" ? "ativo" : "")" href="/Relatorios"><i class="fa-solid fa-chart-column"></i>Relatórios</a>
+        }
+        @foreach (var item in new[] { ("Certificados", "Certificados", "file-signature"), ("Carteirinhas", "Carteirinhas", "id-card"), ("Permissoes", "Permissões", "key") })
+        {
+            if (await Permissoes.PodeAsync(item.Item1, "visualizar"))
+            {
+                <a class="nav-item @(moduloAtual == item.Item1 ? "ativo" : "")" href="/@item.Item1"><i class="fa-solid fa-@item.Item3"></i>@item.Item2</a>
+            }
+        }
+    </nav>
+    <div class="sidebar-dica"><span class="mini-estrela">✦</span><strong>Disciplina dentro e fora do tatame.</strong>
+        <p>Pequenos passos.<br />Grandes conquistas.</p><a href="/Dashboard">Ver resumo <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <a class="nav-item" href="/Configuracoes"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
+</div>
+<div class="perfil-nav"><a href="/Conta/Perfil" class="avatar">@(User.Identity?.Name?.Substring(0, 1) ?? "J")</a><a
+    href="/Conta/Perfil"><strong>@User.Identity?.Name</strong><small>Meu perfil</small></a>
+<form method="post" action="/Conta/Sair">@Html.AntiForgeryToken()<button class="icon-button" title="Sair"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></form>
+</div>

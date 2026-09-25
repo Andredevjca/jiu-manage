@@ -26,6 +26,14 @@ public class LoginModelo
     {
         get; set;
     }
+    public bool LembrarMe { get; set; }
+}
+public class CadastroViewModel
+{
+    [System.ComponentModel.DataAnnotations.Required] public string Nome { get; set; } = "";
+    [System.ComponentModel.DataAnnotations.Required] [System.ComponentModel.DataAnnotations.EmailAddress] public string Email { get; set; } = "";
+    [System.ComponentModel.DataAnnotations.Required] [System.ComponentModel.DataAnnotations.StringLength(128, MinimumLength = 8)] public string Senha { get; set; } = "";
+    [System.ComponentModel.DataAnnotations.Required] [System.ComponentModel.DataAnnotations.Compare("Senha")] public string ConfirmacaoSenha { get; set; } = "";
 }
 public class ChamadaModelo
 {

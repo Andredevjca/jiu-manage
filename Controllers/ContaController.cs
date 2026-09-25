@@ -7,10 +7,11 @@ using System.Security.Claims;
 using JiuManager.Models;
 using JiuManager.Models.ViewModels;
 using JiuManager.Services;
+using JiuManager.Repositories;
 using JiuManager.Configuracoes;
 namespace JiuManager.Controllers;
 
-public class ContaController(AutenticacaoServico servico, ContextoEquipe contexto) : Controller
+public class ContaController(AutenticacaoServico servico, AutenticacaoRepositorio autenticacaoRepositorio, UsuarioServico usuarioServico, ContextoEquipe contexto) : Controller
 {
     [AllowAnonymous] public IActionResult Entrar(string? returnUrl) => View(new LoginModelo { Retorno = returnUrl });
     [AllowAnonymous, HttpPost, EnableRateLimiting("login")]
@@ -56,4 +57,26 @@ public class ContaController(AutenticacaoServico servico, ContextoEquipe context
         Response.StatusCode = 403;
         return View();
     }
+    [Authorize] public async Task<IActionResult> Perfil()
+    {
+        var usuario = await autenticacaoRepositorio.PorIdAsync(contexto.UsuarioId);
+        return View(usuario);
+    }
+    [AllowAnonymous] public IActionResult Cadastrar() => View();
+    [AllowAnonymous, HttpPost] public async Task<IActionResult> Cadastrar(CadastroViewModel modelo)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var usuario = new Usuario { Nome = modelo.Nome, Email = modelo.Email, Perfil = "Administrador" };
+                await usuarioServico.SalvarComSenhaAsync(usuario, modelo.Senha);
+                TempData["Sucesso"] = "Conta criada com sucesso.";
+                return RedirectToAction(nameof(Entrar));
+            }
+            catch (RegraNegocioException erro) { ModelState.AddModelError("", erro.Message); }
+        }
+        return View(modelo);
+    }
+    [AllowAnonymous] public IActionResult EsqueciSenha() => View();
 }

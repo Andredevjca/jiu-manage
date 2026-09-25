@@ -1,42 +1,39 @@
 @model ChamadaModelo
-@{ViewData["Title"]="Frequência";}
-<div class="breadcrumb-linha">Treinamento <span>/</span> Frequência</div>
-<div class="cabecalho-pagina">
-<div>
-<h1>Presença no tatame</h1>
-<p>Selecione a turma e registre a chamada. A consistência constrói campeões.</p>
-</div>
-<a href="/Matriculas" class="btn btn-light">Gerenciar matrículas</a>
+@{ViewData["Title"] = "Frequência";}
+<div class="titulo-pagina">
+    <div><span class="eyebrow">Treinamento</span>
+        <h1>Presença no tatame</h1>
+        <p>Selecione a turma e registre a chamada. A consistência constrói campeões.</p>
+    </div>
+    <a href="/Matriculas" class="btn btn-light">Gerenciar matrículas</a>
 </div>
 <section class="painel">
-<form method="get" class="barra-filtros">
-<select name="turmaId" class="form-select" aria-label="Turma" required>
-<option value="">Selecione a turma</option>@foreach(var turma in Model.Turmas){<option value="@turma.Key" selected="@(Model.TurmaId==turma.Key)">@turma.Value</option>}</select>
-<input type="date" name="data" value="@Model.Data.ToString("yyyy-MM-dd")" max="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" aria-label="Data da chamada" required/>
-<button class="btn btn-primary">Carregar turma</button>
-</form>@if(Model.Alunos.Count>0){<form method="post" action="/Frequencia/Registrar">@Html.AntiForgeryToken()<input type="hidden" name="turmaId" value="@Model.TurmaId"/>
-<input type="hidden" name="data" value="@Model.Data.ToString("yyyy-MM-dd")"/>
-<div class="px-4 pb-3 d-flex justify-content-between">
-<strong>@Model.Alunos.Count alunos na turma</strong>
-<label>
-<input type="checkbox" data-marcar-todos class="form-check-input me-2"/>Marcar todos</label>
-</div>
-<ul class="lista-chamada">@foreach(var aluno in Model.Alunos){<li>
-<div class="pessoa-celula">
-<span class="avatar">@HelperFormatacao.Iniciais(aluno.Nome)</span>
-<span class="nome-pessoa">@aluno.Nome</span>
-</div>
-<label class="form-check form-switch">
-<input class="form-check-input" type="checkbox" name="presentes" value="@aluno.Id" checked="@Model.Presentes.Contains(aluno.Id)"/>Presente</label>
-</li>}</ul>
-<div class="rodape-formulario m-0 p-4">
-<button class="btn btn-primary">
-<i class="fa-solid fa-check me-2">
-</i>Salvar chamada</button>
-</div>
-</form>}else{<div class="estado-vazio">
-<i class="fa-regular fa-calendar-check">
-</i>
-<h3>Pronto para mais um treino?</h3>
-<p>Selecione uma turma com alunos matriculados para começar.</p>
-</div>}</section>
+    <form method="get" class="barra-filtros">
+        <select name="turmaId" class="form-select" aria-label="Turma" required>
+            <option value="">Selecione a turma</option>@foreach (var turma in Model.Turmas) { <option value="@turma.Key" selected="@(Model.TurmaId == turma.Key)">@turma.Value</option> }</select>
+        <input type="date" name="data" value="@Model.Data.ToString("yyyy-MM-dd")" max="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" aria-label="Data da chamada" required />
+        <button class="btn btn-primary">Carregar turma</button>
+    </form>@if (Model.Alunos.Count > 0) { <form method="post" action="/Frequencia/Registrar"> @Html.AntiForgeryToken() <input type="hidden" name="turmaId" value="@Model.TurmaId" />
+            <input type="hidden" name="data" value="@Model.Data.ToString("yyyy-MM-dd")" />
+            <div class="px-4 pb-3 d-flex justify-content-between">
+                <strong>@Model.Alunos.Count alunos na turma</strong>
+                <label>
+                    <input type="checkbox" data-marcar-todos class="form-check-input me-2" />Marcar todos</label>
+            </div>
+            <ul class="lista-chamada">@foreach (var aluno in Model.Alunos) { <li>
+                    <div class="pessoa-celula">
+                        <span class="avatar">@HelperFormatacao.Iniciais(aluno.Nome)</span>
+                        <span class="nome-pessoa">@aluno.Nome</span>
+                    </div>
+                    <label class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="presentes" value="@aluno.Id" checked="@Model.Presentes.Contains(aluno.Id)" />Presente</label>
+                </li> }</ul>
+            <div class="rodape-formulario m-0 p-4">
+                <button class="btn btn-primary">
+                    <i class="fa-solid fa-check"></i> Salvar chamada</button>
+            </div>
+        </form> } else { <div class="estado-vazio">
+                <i class="fa-regular fa-calendar-check vazio-icone"></i>
+                <h3>Pronto para mais um treino?</h3>
+                <p>Selecione uma turma com alunos matriculados para começar.</p>
+            </div> }</section>

@@ -1,182 +1,184 @@
 @model DashboardModelo
 @inject JiuManager.Services.PermissaoServico Permissoes
-@{ViewData["Title"]="Visão geral";var maior=Math.Max(1,Model.Evolucao.Max(e=>e.Total));}
-<div class="breadcrumb-linha">Seu espaço <span>/</span> Visão geral</div>
-<div class="cabecalho-pagina">
-<div>
-<div class="sobretitulo">CADA DIA, UMA NOVA EVOLUÇÃO</div>
-<h1>Olá, @User.Identity?.Name?.Split(' ')[0]<span class="saudacao">.</span>
-</h1>
-<p>Aqui está um resumo da sua equipe de Jiu-Jitsu.</p>
+@{ViewData["Title"] = "Visão geral"; var maior = Math.Max(1, Model.Evolucao.Max(e => e.Total));}
+<div class="titulo-pagina">
+    <div><span class="eyebrow">CADA DIA, UMA NOVA EVOLUÇÃO</span>
+        <h1>Olá, @User.Identity?.Name?.Split(' ')[0]<span class="aceno">✦</span>
+        </h1>
+        <p>Aqui está um resumo da sua equipe de Jiu-Jitsu.</p>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <span class="data-atual">
+            <i class="fa-regular fa-calendar"></i> @DateTime.Today.ToString("dd 'de' MMMM, yyyy")</span>@if (await Permissoes.PodeAsync("Alunos", "criar")) { <a class="btn btn-primary" href="/Alunos/Criar">
+                <i class="fa-solid fa-plus"></i> Novo aluno</a> }
+    </div>
 </div>
-<div class="d-flex gap-2 align-items-center">
-<span class="data-atual">
-<i class="fa-regular fa-calendar me-2">
-</i>@DateTime.Today.ToString("dd 'de' MMMM, yyyy")</span>@if(await Permissoes.PodeAsync("Alunos","criar")){<a class="btn btn-primary" href="/Alunos/Criar">
-<i class="fa-solid fa-plus me-2">
-</i>Novo aluno</a>}</div>
-</div>
-<div class="indicadores">
-@foreach(var indicador in new[]{("Alunos ativos",Model.Alunos.ToString(),"users","Sua equipe no tatame","azul"),("Professores",Model.Professores.ToString(),"user-ninja","Quem inspira a evolução","roxo"),("Unidades",Model.Unidades.ToString(),"building","Conectadas à sua equipe","verde"),("Graduações no mês",Model.Graduacoes.ToString(),"award","Novas conquistas","laranja"),("Em aberto",Model.EmAberto.ToString("C"),"wallet","Saldo de mensalidades","azul")}.Where(i=>Model.ExibirFinanceiro||i.Item3!="wallet")){<article class="indicador">
-<div class="indicador-topo">
-<span>@indicador.Item1</span>
-<span class="icone-indicador @indicador.Item5">
-<i class="fa-solid fa-@indicador.Item3">
-</i>
-</span>
-</div>
-<strong>@indicador.Item2</strong>
-<small>@indicador.Item4</small>
-</article>}
-</div>
-<div class="grade-graficos">
-<section class="painel">
-<div class="cabecalho-painel">
-<div>
-<h2>Alunos por faixa</h2>
-<p>A jornada da sua equipe</p>
-</div>
-<span class="etiqueta-clara">@Model.Alunos atletas</span>
-</div>
-<div class="distribuicao-faixas">@foreach(var faixa in Model.Faixas){<div class="linha-faixa">
-<span>
-<i style="background:@faixa.Cor">
-</i>@faixa.Nome</span>
-<div class="trilho-faixa">
-<div style="width:@(Math.Round(faixa.Total*100d/Math.Max(1,Model.Alunos)))%;background:@faixa.Cor">
-</div>
-</div>
-<strong>@faixa.Total</strong>
-<small>@Math.Round(faixa.Total*100d/Math.Max(1,Model.Alunos))%</small>
-</div>}</div>
-<div class="nota-painel">
-<i class="fa-solid fa-circle-info">
-</i> Cada faixa conta uma história de dedicação.</div>
-</section>
-<section class="painel">
-<div class="cabecalho-painel">
-<div>
-<h2>Evolução de alunos</h2>
-<p>Total de ingressantes acumulado até cada mês</p>
-</div>
-<span class="etiqueta-clara">Últimos 6 meses</span>
-</div>
-<div class="grafico-colunas">
-<div class="grade-grafico">
-<span>@maior</span>
-<span>@(maior/2)</span>
-<span>0</span>
-</div>@foreach(var mes in Model.Evolucao){<div class="coluna-grafico">
-<strong>@mes.Total</strong>
-<div style="height:@(Math.Max(2,mes.Total*100/maior))%" title="@mes.Mes: @mes.Total alunos">
-</div>
-<span>@mes.Mes</span>
-</div>}</div>
-<div class="legenda-grafico">
-<i>
-</i>Alunos cadastrados <span>Constância que se transforma em crescimento.</span>
-</div>
-</section>
+<div class="metricas">
+    @foreach (var indicador in new[] { ("Alunos ativos", Model.Alunos.ToString(), "users", "Sua equipe no tatame", "azul"), ("Professores", Model.Professores.ToString(), "user-ninja", "Quem inspira a evolução", "roxo"), ("Unidades", Model.Unidades.ToString(), "building", "Conectadas à sua equipe", "verde"), ("Graduações no mês", Model.Graduacoes.ToString(), "award", "Novas conquistas", "laranja"), ("Em aberto", Model.EmAberto.ToString("C"), "wallet", "Saldo de mensalidades", "azul") }.Where(i => Model.ExibirFinanceiro || i.Item3 != "wallet")) {
+        <article class="indicador">
+            <div class="indicador-topo">
+                <span>@indicador.Item1</span>
+                <span class="icone-indicador @indicador.Item5">
+                    <i class="fa-solid fa-@indicador.Item3">
+                    </i>
+                </span>
+            </div>
+            <strong>@indicador.Item2</strong>
+            <small>@indicador.Item4</small>
+        </article>
+    }
 </div>
 <div class="grade-dupla">
-<section class="painel">
-<div class="cabecalho-painel">
-<div>
-<h2>
-<i class="fa-solid fa-award icone-titulo">
-</i>Próximas graduações</h2>
-<p>Previsão pelo intervalo configurado da faixa</p>
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <div>
+                <h2>
+                    <i class="fa-solid fa-ribbon icone-titulo">
+                    </i>Alunos por faixa</h2>
+                <p>A jornada da sua equipe</p>
+            </div>
+            <span class="etiqueta-clara">@Model.Alunos atletas</span>
+        </div>
+        <div class="distribuicao-faixas">@foreach (var faixa in Model.Faixas) { <div class="linha-faixa">
+                <span>
+                    <i style="background:@faixa.Cor">
+                    </i>@faixa.Nome</span>
+                <div class="trilho-faixa">
+                    <div style="width:@(Math.Round(faixa.Total * 100d / Math.Max(1, Model.Alunos)))%;background:@faixa.Cor">
+                    </div>
+                </div>
+                <strong>@faixa.Total</strong>
+                <small>@Math.Round(faixa.Total * 100d / Math.Max(1, Model.Alunos))%</small>
+            </div> }</div>
+        <div class="nota-painel">
+            <i class="fa-solid fa-circle-info">
+            </i> Cada faixa conta uma história de dedicação.</div>
+    </section>
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <div>
+                <h2>
+                    <i class="fa-solid fa-chart-line icone-titulo">
+                    </i>Evolução de alunos</h2>
+                <p>Total de ingressantes acumulado até cada mês</p>
+            </div>
+            <span class="etiqueta-clara">Últimos 6 meses</span>
+        </div>
+        <div class="grafico-colunas">
+            <div class="grade-grafico">
+                <span>@maior</span>
+                <span>@(maior / 2)</span>
+                <span>0</span>
+            </div>@foreach (var mes in Model.Evolucao) { <div class="coluna-grafico">
+                    <strong>@mes.Total</strong>
+                    <div style="height:@(Math.Max(2, mes.Total * 100 / maior))%" title="@mes.Mes: @mes.Total alunos">
+                    </div>
+                    <span>@mes.Mes</span>
+                </div> }</div>
+        <div class="legenda-grafico">
+            <i></i>Alunos cadastrados <span>Constância que se transforma em crescimento.</span>
+        </div>
+    </section>
 </div>
-<a href="/Graduacoes" class="link-discreto">Ver todas <i class="fa-solid fa-arrow-right">
-</i>
-</a>
+<div class="grade-dupla">
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <div>
+                <h2>
+                    <i class="fa-solid fa-award icone-titulo">
+                    </i>Próximas graduações</h2>
+                <p>Previsão pelo intervalo configurado da faixa</p>
+            </div>
+            <a href="/Graduacoes" class="link-discreto">Ver todas <i class="fa-solid fa-arrow-right">
+                </i>
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table tabela compacta">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Faixa atual</th>
+                        <th>Previsão</th>
+                    </tr>
+                </thead>
+                <tbody>@foreach (var aluno in Model.ProximasGraduacoes) { <tr>
+                        <td>
+                            <div class="pessoa-celula">
+                                <span class="avatar pequeno">@HelperFormatacao.Iniciais(aluno["Nome"]!.ToString()!)</span>
+                                <a class="nome-pessoa" href="/Alunos/Detalhes/@aluno["Id"]">@aluno["Nome"]</a>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="faixa-etiqueta">@aluno["Faixa"]</span>
+                        </td>
+                        <td>
+                            <span class="status @(Convert.ToInt32(aluno["Dias"]) <= 0 ? "negativo" : "neutro")">@(Convert.ToInt32(aluno["Dias"]) <= 0 ? "Revisar" : "Em " + aluno["Dias"] + " dias")</span>
+                        </td>
+                    </tr> } @if (Model.ProximasGraduacoes.Count == 0) { <tr>
+                        <td colspan="3" class="text-center p-4 text-muted">Nenhuma graduação prevista.</td>
+                    </tr> }</tbody>
+            </table>
+        </div>
+    </section>
+    @if (Model.ExibirFinanceiro) { <section class="painel">
+            <div class="cabecalho-painel">
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-wallet icone-titulo">
+                        </i>Mensalidades em aberto</h2>
+                    <p>Acompanhe os próximos recebimentos</p>
+                </div>
+                <a href="/Mensalidades" class="link-discreto">Ver todas <i class="fa-solid fa-arrow-right">
+                    </i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table tabela compacta">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Vencimento</th>
+                            <th>Saldo</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>@foreach (var mensalidade in Model.Mensalidades) { <tr>
+                            <td class="nome-pessoa">@mensalidade["Aluno"]</td>
+                            <td>@Convert.ToDateTime(mensalidade["Vencimento"]).ToString("dd/MM")</td>
+                            <td class="valor-moeda">@Convert.ToDecimal(mensalidade["Saldo"]).ToString("C")</td>
+                            <td>
+                                <span class="status @(mensalidade["Status"]?.ToString() == "Atrasado" ? "negativo" : "neutro")">@mensalidade["Status"]</span>
+                            </td>
+                        </tr> } @if (Model.Mensalidades.Count == 0) { <tr>
+                            <td colspan="4" class="text-center p-4 text-muted">Tudo em dia. Nenhuma mensalidade em aberto.</td>
+                        </tr> }</tbody>
+                </table>
+            </div>
+        </section> }
 </div>
-<div class="table-responsive">
-<table class="table tabela compacta">
-<thead>
-<tr>
-<th>Aluno</th>
-<th>Faixa atual</th>
-<th>Previsão</th>
-</tr>
-</thead>
-<tbody>@foreach(var aluno in Model.ProximasGraduacoes){<tr>
-<td>
-<div class="pessoa-celula">
-<span class="avatar pequeno">@HelperFormatacao.Iniciais(aluno["Nome"]!.ToString()!)</span>
-<a class="nome-pessoa" href="/Alunos/Detalhes/@aluno["Id"]">@aluno["Nome"]</a>
-</div>
-</td>
-<td>
-<span class="faixa-etiqueta">@aluno["Faixa"]</span>
-</td>
-<td>
-<span class="status neutro">@(Convert.ToInt32(aluno["Dias"])<=0?"Revisar":"Em "+aluno["Dias"]+" dias")</span>
-</td>
-</tr>}@if(Model.ProximasGraduacoes.Count==0){<tr>
-<td colspan="3" class="text-center p-4 text-muted">Nenhuma graduação prevista.</td>
-</tr>}</tbody>
-</table>
-</div>
-</section>
-@if(Model.ExibirFinanceiro){<section class="painel">
-<div class="cabecalho-painel">
-<div>
-<h2>
-<i class="fa-solid fa-wallet icone-titulo">
-</i>Mensalidades em aberto</h2>
-<p>Acompanhe os próximos recebimentos</p>
-</div>
-<a href="/Mensalidades" class="link-discreto">Ver todas <i class="fa-solid fa-arrow-right">
-</i>
-</a>
-</div>
-<div class="table-responsive">
-<table class="table tabela compacta">
-<thead>
-<tr>
-<th>Aluno</th>
-<th>Vencimento</th>
-<th>Saldo</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>@foreach(var mensalidade in Model.Mensalidades){<tr>
-<td class="nome-pessoa">@mensalidade["Aluno"]</td>
-<td>@Convert.ToDateTime(mensalidade["Vencimento"]).ToString("dd/MM")</td>
-<td class="valor-moeda">@Convert.ToDecimal(mensalidade["Saldo"]).ToString("C")</td>
-<td>
-<span class="status @(mensalidade["Status"]?.ToString()=="Atrasado"?"negativo":"neutro")">@mensalidade["Status"]</span>
-</td>
-</tr>}@if(Model.Mensalidades.Count==0){<tr>
-<td colspan="4" class="text-center p-4 text-muted">Tudo em dia. Nenhuma mensalidade em aberto.</td>
-</tr>}</tbody>
-</table>
-</div>
-</section>}</div>
 <section class="painel agenda">
-<div class="cabecalho-painel">
-<div>
-<h2>Na agenda da equipe</h2>
-<p>Encontros que fortalecem o nosso Jiu-Jitsu</p>
-</div>
-<a class="link-discreto" href="/Eventos">Ver agenda <i class="fa-solid fa-arrow-right">
-</i>
-</a>
-</div>
-<div class="lista-eventos">@foreach(var evento in Model.Eventos){var data=Convert.ToDateTime(evento["Data"]);<a href="/Eventos/Detalhes/@evento["Id"]" class="evento">
-<div class="data-evento">
-<small>@data.ToString("MMM").ToUpper()</small>
-<strong>@data.Day</strong>
-</div>
-<div>
-<span class="tipo-evento">@evento["Tipo"]</span>
-<h3>@evento["Nome"]</h3>
-<p>
-<i class="fa-solid fa-location-dot me-1">
-</i>@evento["Local"]</p>
-</div>
-<i class="fa-solid fa-chevron-right">
-</i>
-</a>}@if(Model.Eventos.Count==0){<p class="p-4 text-muted">Nenhum evento agendado.</p>}</div>
+    <div class="cabecalho-painel">
+        <div>
+            <h2>Na agenda da equipe</h2>
+            <p>Encontros que fortalecem o nosso Jiu-Jitsu</p>
+        </div>
+        <a class="link-discreto" href="/Eventos">Ver agenda <i class="fa-solid fa-arrow-right">
+            </i>
+        </a>
+    </div>
+    <div class="lista-eventos">@foreach (var evento in Model.Eventos) { var data = Convert.ToDateTime(evento["Data"]); <a href="/Eventos/Detalhes/@evento["Id"]" class="evento">
+            <div class="data-evento">
+                <small>@data.ToString("MMM").ToUpper()</small>
+                <strong>@data.Day</strong>
+            </div>
+            <div>
+                <span class="tipo-evento">@evento["Tipo"]</span>
+                <h3>@evento["Nome"]</h3>
+                <p>
+                    <i class="fa-solid fa-location-dot"></i> @evento["Local"]</p>
+            </div>
+            <i class="fa-solid fa-chevron-right">
+            </i>
+        </a> } @if (Model.Eventos.Count == 0) { <p class="p-4 text-muted">Nenhum evento agendado.</p> }</div>
 </section>

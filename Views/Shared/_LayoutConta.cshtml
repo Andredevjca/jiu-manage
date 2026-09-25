@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · JiuManager</title>
+    
+    
+    
+    
+    <partial name="_Estilos" />
+</head>
+
+<body class="pagina-conta">
+    <aside class="conta-hero"><a class="marca" href="/Conta/Entrar"><span class="marca-icone"><i
+        class="fa-solid fa-arrow-trend-up"></i></span>Jiu<span class="mais">Manager</span></a>
+        <div class="hero-conteudo"><span class="eyebrow">MAIS ORGANIZAÇÃO. MAIS CRESCIMENTO.</span>
+            <h2>Sua equipe.<br />Sua gestão.<br /><em>Sua evolução.</em></h2>
+            <p>Existe um caminho entre o que você gerencia<br />e o que você conquista. Vamos organizá-lo?</p>
+            <div class="ilustracao-meta">
+                <div class="orbita o1"></div>
+                <div class="orbita o2"></div>
+                <div class="orbita o3"></div><span class="orbita-centro"><i
+                class="fa-solid fa-flag-checkered"></i></span><span class="orbita-ponto"><i
+                class="fa-solid fa-plane"></i></span>
+                <div class="mini-conquista"><span>Um pouco mais perto ✦</span><strong>O futuro da sua equipe começa hoje.</strong>
+                    <div class="progress">
+                        <div style="width:68%"></div>
+                    </div>
+                </div>
+            </div>
+        </div><small>Uma gestão real para a equipe que você quer construir.</small>
+    </aside>
+    <main class="conta-principal">
+        <div class="conta-form">@if(TempData["Sucesso"] is string s){
+            <div class="alert alert-success">@s</div>
+        }
+        @RenderBody()</div>
+        <footer>© @DateTime.Today.Year JiuManager · Feito para quem vive o Jiu-Jitsu.</footer>
+    </main>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+
+</html>
