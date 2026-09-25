@@ -1,2 +1,90 @@
-@model ListaModelo
-<partial name="_Lista" model="Model" />
+﻿@model ListaModelo
+@inject PermissaoServico Permissoes
+@{
+    ViewData["Title"] = "Alunos";
+    var criar = await Permissoes.PodeAsync("Alunos", "criar");
+    var editar = await Permissoes.PodeAsync("Alunos", "editar");
+    var excluir = await Permissoes.PodeAsync("Alunos", "excluir");
+    string Opcao(string modulo, object? id) => Model.Opcoes.GetValueOrDefault(modulo)?.GetValueOrDefault(Convert.ToInt32(id)) ?? "—";
+    string Pagina(int numero) => Url.Action("Index", new { pagina = numero, busca = Model.Busca, status = Model.Status, unidadeId = Model.UnidadeId, pagamento = Model.Pagamento })!;
+}
+<div class="titulo-pagina">
+    <div>
+        <span class="eyebrow">GESTÃO DA EQUIPE</span>
+        <h1>Alunos <span class="contador">@Model.Total</span></h1>
+        <p>Acompanhe a unidade de treino, a faixa e as mensalidades de cada atleta.</p>
+    </div>
+    @if (criar) { <a class="btn btn-primary" href="/Alunos/Criar"><i class="fa-solid fa-plus" aria-hidden="true"></i> Novo aluno</a> }
+</div>
+<section class="painel">
+    <form method="get" class="barra-filtros filtros-alunos">
+        <div class="campo-busca"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input name="busca" value="@Model.Busca" placeholder="Buscar aluno, e-mail ou telefone..." aria-label="Buscar aluno" /></div>
+        <div class="filtro-aluno">
+            <label for="unidade-alunos">Unidade de treino</label>
+            <select id="unidade-alunos" name="unidadeId" class="form-select">
+                <option value="0">Todas as unidades</option>
+                @foreach (var unidade in Model.Opcoes["Unidades"].OrderBy(u => u.Value)) { <option value="@unidade.Key" selected="@(Model.UnidadeId == unidade.Key)">@unidade.Value</option> }
+            </select>
+        </div>
+        <div class="filtro-aluno">
+            <label for="status-alunos">Cadastro</label>
+            <select id="status-alunos" name="status" class="form-select">
+                <option value="">Todos os status</option>
+                @foreach (var status in Model.Modulo.Campos.First(c => c.Nome == "Status").Opcoes!) { <option selected="@(Model.Status == status)">@status</option> }
+            </select>
+        </div>
+        @if (Model.ExibirFinanceiro) {
+            <div class="filtro-aluno">
+                <label for="pagamento-alunos">Mensalidades</label>
+                <select id="pagamento-alunos" name="pagamento" class="form-select">
+                    <option value="">Todas as situações</option>
+                    @foreach (var situacao in new[] { "Em dia", "A vencer", "Em atraso", "Sem cobranças" }) { <option selected="@(Model.Pagamento == situacao)">@situacao</option> }
+                </select>
+            </div>
+        }
+        <button class="btn btn-light"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Filtrar</button>
+        @if (Model.UnidadeId != 0 || Model.Busca != "" || Model.Status != "" || Model.Pagamento != "") { <a href="/Alunos?unidadeId=0" class="btn btn-link">Limpar</a> }
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Aluno</th><th>Unidade de treino</th><th>Faixa / grau</th><th>Cadastro</th>@if (Model.ExibirFinanceiro) { <th>Mensalidades</th> }<th class="text-end">Ações</th></tr></thead>
+            <tbody>
+                @foreach (var registro in Model.Registros) {
+                    var id = Convert.ToInt32(registro["Id"]);
+                    var nome = registro["Nome"]?.ToString() ?? "";
+                    var faixaId = Convert.ToInt32(registro["FaixaId"]);
+                    var status = registro["Status"]?.ToString();
+                    <tr>
+                        <td><div class="pessoa-celula">
+                            @if (registro.GetValueOrDefault("Foto") is string foto && !string.IsNullOrEmpty(foto)) { <img class="avatar" src="@foto" alt="" /> }
+                            else { <span class="avatar">@HelperFormatacao.Iniciais(nome)</span> }
+                            <div><a class="nome-pessoa" href="/Alunos/Detalhes/@id">@nome</a><small>@registro.GetValueOrDefault("Email")</small></div>
+                        </div></td>
+                        <td>@Opcao("Unidades", registro["UnidadeId"])</td>
+                        <td><span class="faixa-etiqueta faixa-colorida" style="@BadgeFaixa.Estilo(Model.CoresFaixas.GetValueOrDefault(faixaId))"><i class="fa-solid fa-grip-lines" aria-hidden="true"></i>@Opcao("Faixas", faixaId)</span><small class="grau-aluno">@Opcao("Graus", registro["GrauId"])</small></td>
+                        <td><span class="status @(status == "Ativo" ? "positivo" : "neutro")">@status</span></td>
+                        @if (Model.ExibirFinanceiro) {
+                            var resumo = Model.FinanceiroAlunos[id];
+                            <td><span class="status @resumo.Classe">@resumo.Situacao</span>
+                                @if (resumo.EmAtraso > 0) { <small class="grau-aluno">@resumo.EmAtraso.ToString("C") em atraso</small> }
+                                else if (resumo.EmAberto > 0) { <small class="grau-aluno">@resumo.EmAberto.ToString("C") a vencer</small> }
+                                <a class="financeiro-link" href="/Alunos/Detalhes/@id?aba=financeiro">Ver pagamentos</a>
+                            </td>
+                        }
+                        <td><div class="botoes">
+                            <a class="botao-icone" href="/Alunos/Detalhes/@id" title="Visualizar aluno" aria-label="Visualizar @nome"><i class="fa-regular fa-eye" aria-hidden="true"></i></a>
+                            @if (editar) { <a class="botao-icone" href="/Alunos/Editar/@id" title="Editar aluno" aria-label="Editar @nome"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i></a> }
+                            @if (excluir) { <form method="post" action="/Alunos/Excluir" data-confirmar="Excluir este aluno? Esta ação não pode ser desfeita.">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@id" /><button class="botao-icone text-danger" title="Excluir aluno" aria-label="Excluir @nome"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></form> }
+                        </div></td>
+                    </tr>
+                }
+                @if (Model.Registros.Count == 0) { <tr><td colspan="@(Model.ExibirFinanceiro ? 6 : 5)"><div class="estado-vazio"><i class="fa-solid fa-users vazio-icone" aria-hidden="true"></i><h3>Nenhum aluno encontrado</h3><p>Ajuste a unidade, a busca ou os filtros selecionados.</p></div></td></tr> }
+            </tbody>
+        </table>
+    </div>
+    <div class="paginacao"><span>@Model.Total alunos · Página @Model.Pagina de @Math.Max(1, Model.Paginas)</span><div>
+        @if (Model.Pagina > 1) { <a class="btn btn-light btn-sm" href="@Pagina(Model.Pagina - 1)">Anterior</a> }
+        @if (Model.Pagina < Model.Paginas) { <a class="btn btn-light btn-sm" href="@Pagina(Model.Pagina + 1)">Próxima</a> }
+    </div></div>
+</section>
+@if (Model.ExibirFinanceiro) { <p class="nota-financeiro">A situação considera as cobranças registradas e os recebimentos, incluindo pagamentos parciais. “A vencer” inclui parcelas que vencem hoje. Cobranças canceladas não compõem o saldo.</p> }

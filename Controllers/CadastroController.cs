@@ -11,7 +11,7 @@ namespace JiuManager.Controllers;
 public abstract class CadastroController<T>(CadastroServico<T> servico, TelaServico telas, CatalogoModulos catalogo, ImagemServico imagens) : Controller where T : Registro, new()
 {
     protected readonly CadastroServico<T> Servico = servico; protected readonly TelaServico Telas = telas; protected readonly Modulo Modulo = catalogo.Obter<T>();
-    public async Task<IActionResult> Index(string? busca, int pagina = 1, string? status = null) => View(await Telas.ListaAsync(Modulo.Plural, busca, pagina, status));
+    public async Task<IActionResult> Index(string? busca, int pagina = 1, string? status = null, int? unidadeId = null, string? pagamento = null) => View(await Telas.ListaAsync(Modulo.Plural, busca, pagina, status, unidadeId, pagamento));
     public virtual async Task<IActionResult> Criar() => View(new FormularioModelo { Modulo = Modulo, Registro = new T(), Opcoes = await Telas.OpcoesAsync(Modulo) });
     public async Task<IActionResult> Editar(int id)
     {

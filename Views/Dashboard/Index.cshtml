@@ -28,6 +28,44 @@
         </article>
     }
 </div>
+<section class="painel painel-unidades" aria-labelledby="titulo-alunos-unidade">
+    <div class="cabecalho-painel">
+        <div>
+            <h2 id="titulo-alunos-unidade"><i class="fa-solid fa-building icone-titulo" aria-hidden="true"></i>Alunos por unidade</h2>
+            <p>Alunos ativos por local de treino, conforme o filtro de unidade.</p>
+        </div>
+        <span class="etiqueta-clara">@Model.Alunos alunos ativos</span>
+    </div>
+    @if (Model.AlunosPorUnidade.Count > 0)
+    {
+        var podeVerAlunos = await Permissoes.PodeAsync("Alunos", "visualizar");
+        <ul class="distribuicao-unidades">
+            @foreach (var unidade in Model.AlunosPorUnidade)
+            {
+                var percentual = Math.Round(unidade.Total * 100d / Math.Max(1, Model.Alunos));
+                <li class="resumo-unidade">
+                    <div class="unidade-cabecalho">
+                        @if (podeVerAlunos)
+                        {
+                            <a href="/Alunos?unidadeId=@unidade.Id&amp;status=Ativo" title="Ver alunos ativos de @unidade.Nome">@unidade.Nome</a>
+                        }
+                        else
+                        {
+                            <span>@unidade.Nome</span>
+                        }
+                        <strong>@unidade.Total <small>@(unidade.Total == 1 ? "aluno" : "alunos")</small></strong>
+                    </div>
+                    <div class="unidade-barra" aria-hidden="true"><span style="width:@(percentual.ToString(CultureInfo.InvariantCulture))%"></span></div>
+                    <small class="muted">@percentual% dos alunos ativos</small>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="px-4 pb-4 text-muted">Nenhuma unidade encontrada para o filtro atual.</p>
+    }
+</section>
 <div class="grade-dupla">
     <section class="painel">
         <div class="cabecalho-painel">

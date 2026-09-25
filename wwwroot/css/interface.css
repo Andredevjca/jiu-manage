@@ -138,3 +138,40 @@
     .conta-principal { padding: 32px 24px; }
     .conta-form h1 { font-size: 27px; }
 }
+
+/* Dashboard: distribuição dos alunos ativos entre as unidades. */
+.painel-unidades { margin-bottom: 24px; }
+.distribuicao-unidades { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; margin: 0; padding: 0 24px 24px; }
+.resumo-unidade { padding: 18px; border: 1px solid var(--cor-borda); border-radius: 12px; background: #f8fafd; min-width: 0; }
+.unidade-cabecalho { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.unidade-cabecalho > a, .unidade-cabecalho > span { font-weight: 800; overflow-wrap: anywhere; }
+.unidade-cabecalho strong { flex-shrink: 0; font-size: 22px; line-height: 1.2; }
+.unidade-cabecalho strong small { display: block; font-size: 11px; font-weight: 600; color: #64748b; text-align: right; }
+.unidade-barra { height: 7px; border-radius: 8px; overflow: hidden; background: #e3eaf5; margin-bottom: 8px; }
+.unidade-barra > span { display: block; height: 100%; background: var(--cor-primaria); border-radius: inherit; }
+@media (max-width: 700px) {
+    .distribuicao-unidades { grid-template-columns: minmax(0, 1fr); padding: 0 20px 20px; }
+}
+
+/* Alunos: unidade, graduação e acompanhamento financeiro. */
+.faixa-etiqueta.faixa-colorida {
+    background: var(--faixa-cor, #e2e8f0);
+    color: var(--faixa-texto, #000);
+    border: 1px solid #0003;
+    font-weight: 800;
+}
+.faixa-colorida i { color: inherit; }
+.grau-aluno, .financeiro-link { display: block; font-size: 12px; margin-top: 5px; }
+.grau-aluno, .nota-financeiro { color: #64748b; }
+.financeiro-link { font-weight: 700; }
+.filtros-alunos { align-items: flex-end; }
+.filtro-aluno { flex: 1 1 155px; }
+.filtro-aluno label { display: block; font-size: 12px; font-weight: 800; color: #415775; margin-bottom: 6px; }
+.filtros-alunos .campo-busca { flex: 2 1 230px; min-height: 46px; }
+.nota-financeiro { font-size: 12px; margin: 16px 0; }
+.resumo-aluno { padding: 0 24px 24px; }
+.resumo-aluno .indicador > strong { font-size: 24px; }
+@media (max-width: 700px) {
+    .filtro-aluno { flex-basis: 100%; }
+    .resumo-aluno { padding: 0 20px 20px; }
+}

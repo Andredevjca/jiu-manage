@@ -23,6 +23,13 @@ public class DashboardServico(ConsultaRepositorio consultas, ContextoEquipe cont
             m["Status"] = Convert.ToDateTime(m["Vencimento"]) < DateTime.Today ? "Atrasado" : "Pendente";
         }
         var modelo = new DashboardModelo { ExibirFinanceiro = financeiro, Alunos = alunos.Count(a => a["Status"]?.ToString() == "Ativo"), Professores = professores.Count(p => p["Status"]?.ToString() == "Ativo"), Unidades = unidades.Count(u => u["Status"]?.ToString() == "Ativo" && (!contexto.UnidadeId.HasValue || Convert.ToInt32(u["Id"]) == contexto.UnidadeId)), Graduacoes = graduacoes.Count(g => Convert.ToDateTime(g["DataGraduacao"]).ToString("yyyy-MM") == DateTime.Today.ToString("yyyy-MM")), EmAberto = mensalidades.Sum(m => Convert.ToDecimal(m["Saldo"])), Mensalidades = mensalidades.OrderBy(m => m["Vencimento"]).Take(5).ToList(), Eventos = (await consultas.ListarAsync("Eventos", true)).Where(e => Convert.ToDateTime(e["Data"]) >= DateTime.Today).OrderBy(e => e["Data"]).Take(4).ToList() };
+        var totaisPorUnidade = alunos.Where(a => a["Status"]?.ToString() == "Ativo")
+            .GroupBy(a => Convert.ToInt32(a["UnidadeId"]))
+            .ToDictionary(g => g.Key, g => g.Count());
+        modelo.AlunosPorUnidade = unidades
+            .Where(u => !contexto.UnidadeId.HasValue || Convert.ToInt32(u["Id"]) == contexto.UnidadeId)
+            .Select(u => (Id: Convert.ToInt32(u["Id"]), Nome: u["Nome"]?.ToString() ?? "Unidade", Total: totaisPorUnidade.GetValueOrDefault(Convert.ToInt32(u["Id"]))))
+            .OrderByDescending(u => u.Total).ThenBy(u => u.Nome).ToList();
         modelo.Faixas = faixas.OrderBy(f => f["Ordem"]).Select(f => (f["Nome"]!.ToString()!, f["Cor"]!.ToString()!, alunos.Count(a => Equals(a["FaixaId"], f["Id"]) && a["Status"]?.ToString() == "Ativo"))).ToList();
         for (int i = 5; i >= 0; i--)
         {

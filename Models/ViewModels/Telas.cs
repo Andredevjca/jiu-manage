@@ -3,6 +3,11 @@ namespace JiuManager.Models.ViewModels;
 
 public class ListaModelo
 {
+    public int UnidadeId { get; set; }
+    public string Pagamento { get; set; } = "";
+    public bool ExibirFinanceiro { get; set; }
+    public Dictionary<int, string> CoresFaixas { get; set; } = [];
+    public Dictionary<int, JiuManager.Helpers.ResumoFinanceiroAluno> FinanceiroAlunos { get; set; } = [];
     public Modulo Modulo { get; set; } = new(); public List<Dictionary<string, object?>> Registros { get; set; } = []; public Dictionary<string, Dictionary<int, string>> Opcoes { get; set; } = []; public string Busca { get; set; } = ""; public string Status { get; set; } = ""; public int Pagina { get; set; } = 1; public int Total
     {
         get; set;
@@ -15,6 +20,9 @@ public class FormularioModelo
 }
 public class DetalhesModelo
 {
+    public string? CorFaixa { get; set; }
+    public List<JiuManager.Helpers.CobrancaAluno> HistoricoFinanceiro { get; set; } = [];
+    public JiuManager.Helpers.ResumoFinanceiroAluno? ResumoFinanceiro { get; set; }
     public Modulo Modulo { get; set; } = new(); public Registro Registro { get; set; } = null!; public Dictionary<string, Dictionary<int, string>> Opcoes { get; set; } = []; public List<Dictionary<string, object?>> Graduacoes { get; set; } = []; public List<Dictionary<string, object?>> Mensalidades { get; set; } = []; public List<Dictionary<string, object?>> Campeonatos { get; set; } = []; public decimal Frequencia
     {
         get; set;
@@ -45,6 +53,7 @@ public class ChamadaModelo
 }
 public class DashboardModelo
 {
+    public List<(int Id, string Nome, int Total)> AlunosPorUnidade { get; set; } = [];
     public bool ExibirFinanceiro
     {
         get; set;
